@@ -1,14 +1,12 @@
 import { useState } from "react";
 import Avatar from "./Avatar";
 import AchievementsPanel from "./AchievementsPanel";
-
-const XP_CURRENT = 2450;
-const XP_NEXT = 3000;
-const LEVEL = 7;
+import { useProgress } from "@/hooks/useProgress";
 
 export default function GameHUD() {
   const [showAchievements, setShowAchievements] = useState(false);
-  const xpPercent = Math.round((XP_CURRENT / XP_NEXT) * 100);
+  const { completedCount, totalCount } = useProgress();
+  const progressPercent = Math.round((completedCount / totalCount) * 100);
 
   return (
     <>
@@ -22,9 +20,8 @@ export default function GameHUD() {
           minHeight: "72px",
         }}
       >
-        {/* ── Characters side by side — no labels ── */}
+        {/* ── Characters side by side ── */}
         <div className="flex items-center gap-1.5 flex-shrink-0">
-          {/* Char 1 */}
           <div
             style={{
               borderRadius: "50%",
@@ -35,8 +32,6 @@ export default function GameHUD() {
           >
             <Avatar character={1} size={44} />
           </div>
-
-          {/* tiny heart between them */}
           <span
             style={{
               fontSize: "11px",
@@ -47,8 +42,6 @@ export default function GameHUD() {
           >
             ❤️
           </span>
-
-          {/* Char 2 */}
           <div
             style={{
               borderRadius: "50%",
@@ -67,7 +60,7 @@ export default function GameHUD() {
           style={{ background: "rgba(200,140,40,0.2)", marginTop: 6, marginBottom: 6 }}
         />
 
-        {/* ── Center: title + XP ── */}
+        {/* ── Center ── */}
         <div className="flex-1 flex flex-col items-center gap-1 min-w-0">
           {/* Title */}
           <div className="flex items-center gap-2">
@@ -86,23 +79,26 @@ export default function GameHUD() {
             <span style={{ color: "rgba(200,140,40,0.5)", fontSize: "10px" }}>✦</span>
           </div>
 
-          {/* XP Bar + Level */}
+          {/* Progress bar */}
           <div className="flex items-center gap-3 w-full max-w-sm">
-            {/* Level badge */}
+            {/* Chapter count badge */}
             <div
               className="flex-shrink-0 flex items-center justify-center rounded-lg px-2 py-0.5"
               style={{
                 background: "rgba(200,140,20,0.18)",
                 border: "1px solid rgba(200,140,40,0.45)",
-                minWidth: 48,
+                minWidth: 52,
               }}
             >
-              <span className="text-xs font-bold" style={{ color: "#e8c060", fontFamily: "Georgia, serif" }}>
-                Lv.{LEVEL}
+              <span
+                className="text-xs font-bold"
+                style={{ color: "#e8c060", fontFamily: "Georgia, serif", whiteSpace: "nowrap" }}
+              >
+                {completedCount}/{totalCount}
               </span>
             </div>
 
-            {/* XP bar */}
+            {/* Bar */}
             <div className="flex-1 flex flex-col gap-0.5">
               <div
                 className="relative rounded-full overflow-hidden"
@@ -115,10 +111,12 @@ export default function GameHUD() {
                 <div
                   className="absolute inset-y-0 left-0 rounded-full"
                   style={{
-                    width: `${xpPercent}%`,
-                    background: "linear-gradient(90deg, #c49a3c 0%, #f0d060 50%, #c49a3c 100%)",
+                    width: `${progressPercent}%`,
+                    background:
+                      "linear-gradient(90deg, #c49a3c 0%, #f0d060 50%, #c49a3c 100%)",
                     boxShadow: "0 0 8px rgba(200,160,40,0.6)",
-                    transition: "width 1s ease",
+                    transition: "width 0.8s ease",
+                    minWidth: completedCount > 0 ? "12px" : "0",
                   }}
                 />
                 <div
@@ -132,11 +130,27 @@ export default function GameHUD() {
                 />
               </div>
               <div className="flex justify-between">
-                <span style={{ color: "rgba(200,160,80,0.5)", fontFamily: "Georgia, serif", fontSize: "9px" }}>
-                  {XP_CURRENT.toLocaleString()} XP
+                <span
+                  style={{
+                    color: "rgba(200,160,80,0.5)",
+                    fontFamily: "Georgia, serif",
+                    fontSize: "9px",
+                  }}
+                >
+                  {completedCount === 0
+                    ? "Aventura iniciada"
+                    : completedCount === totalCount
+                    ? "Aventura completa ✨"
+                    : `${completedCount} capítulo${completedCount > 1 ? "s" : ""} concluído${completedCount > 1 ? "s" : ""}`}
                 </span>
-                <span style={{ color: "rgba(200,160,80,0.35)", fontFamily: "Georgia, serif", fontSize: "9px" }}>
-                  {XP_NEXT.toLocaleString()} XP
+                <span
+                  style={{
+                    color: "rgba(200,160,80,0.35)",
+                    fontFamily: "Georgia, serif",
+                    fontSize: "9px",
+                  }}
+                >
+                  {totalCount} capítulos
                 </span>
               </div>
             </div>

@@ -2,6 +2,8 @@ import { useParams, useLocation } from "wouter";
 import { CHAPTERS } from "@/data/chapters";
 import { useState } from "react";
 import Avatar from "@/components/Avatar";
+import { QUIZZES } from "@/data/progression";
+import { useProgress } from "@/hooks/useProgress";
 
 function PlaceholderImage({ caption }: { caption: string }) {
   return (
@@ -51,6 +53,7 @@ export default function ChapterPage() {
   const params = useParams<{ id: string }>();
   const [, navigate] = useLocation();
   const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
+  const { isCompleted, completeChapter, nextChapter } = useProgress();
 
   const chapter = CHAPTERS[params.id ?? ""];
 
@@ -338,8 +341,19 @@ export default function ChapterPage() {
           </div>
         </section>
 
+        {/* ── QUIZ ── */}
+        <QuizSection
+          chapterId={chapter.id}
+          chapterColor={chapter.color}
+          isCompleted={isCompleted(chapter.id)}
+          completeChapter={completeChapter}
+          nextChapterId={nextChapter(chapter.id)}
+          onNavigateNext={(id) => navigate(`/chapter/${id}`)}
+          onNavigateMap={() => navigate("/map")}
+        />
+
         {/* ── NAV BOTTOM ── */}
-        <div className="flex justify-center pt-4 pb-8">
+        <div className="flex justify-center pt-2 pb-8">
           <button
             onClick={() => navigate("/map")}
             className="flex items-center gap-2 px-8 py-3 rounded-full text-sm font-medium transition-all hover:scale-105"
@@ -439,5 +453,245 @@ function EmptyState({ icon, text, color }: { icon: string; text: string; color: 
         {text}
       </p>
     </div>
+  );
+}
+
+function QuizSection({
+  chapterId,
+  chapterColor,
+  isCompleted,
+  completeChapter,
+  nextChapterId,
+  onNavigateNext,
+  onNavigateMap,
+}: {
+  chapterId: string;
+  chapterColor: string;
+  isCompleted: boolean;
+  completeChapter: (id: string) => void;
+  nextChapterId: string | null;
+  onNavigateNext: (id: string) => void;
+  onNavigateMap: () => void;
+}) {
+  const quiz = QUIZZES[chapterId];
+  const [selected, setSelected] = useState<string | null>(null);
+  const [answered, setAnswered] = useState(false);
+  const [correct, setCorrect] = useState(false);
+
+  if (!quiz) return null;
+
+  function handleSelect(key: string) {
+    if (answered && correct) return;
+    setSelected(key);
+    setAnswered(false);
+    setCorrect(false);
+  }
+
+  function handleConfirm() {
+    if (!selected) return;
+    const isCorrect = selected === quiz.correctKey;
+    setAnswered(true);
+    setCorrect(isCorrect);
+    if (isCorrect && !isCompleted) {
+      completeChapter(chapterId);
+    }
+  }
+
+  const showSuccess = isCompleted || (answered && correct);
+  const showError = answered && !correct;
+
+  return (
+    <section>
+      <SectionTitle icon="🗺️" label="Desafio do Capítulo" color={chapterColor} />
+
+      <div
+        className="mt-4 rounded-2xl overflow-hidden"
+        style={{
+          background: "linear-gradient(135deg, rgba(14,9,2,0.95) 0%, rgba(22,14,4,0.95) 100%)",
+          border: `1px solid ${chapterColor}35`,
+          boxShadow: `0 0 32px ${chapterColor}10`,
+        }}
+      >
+        {/* ── Completed state ── */}
+        {showSuccess ? (
+          <div className="flex flex-col items-center gap-4 px-6 py-8 text-center">
+            <div
+              style={{
+                fontSize: "40px",
+                filter: "drop-shadow(0 0 16px rgba(80,220,80,0.6))",
+                animation: "float 3s ease-in-out infinite",
+              }}
+            >
+              ✅
+            </div>
+            <p
+              style={{
+                fontFamily: "Georgia, serif",
+                fontSize: "16px",
+                color: "#a8e6a0",
+                textShadow: "0 0 20px rgba(80,220,80,0.4)",
+                fontWeight: "bold",
+              }}
+            >
+              {quiz.successMessage}
+            </p>
+            <div className="flex gap-3 mt-2 flex-wrap justify-center">
+              {nextChapterId && (
+                <button
+                  onClick={() => onNavigateNext(nextChapterId)}
+                  className="transition-all hover:scale-105"
+                  style={{
+                    background: `linear-gradient(135deg, ${chapterColor}30, ${chapterColor}15)`,
+                    border: `1px solid ${chapterColor}60`,
+                    borderRadius: "50px",
+                    padding: "10px 28px",
+                    color: "#f0d888",
+                    fontFamily: "Georgia, serif",
+                    fontSize: "13px",
+                    cursor: "pointer",
+                    boxShadow: `0 0 20px ${chapterColor}20`,
+                  }}
+                >
+                  Próximo Capítulo →
+                </button>
+              )}
+              <button
+                onClick={onNavigateMap}
+                className="transition-all hover:scale-105"
+                style={{
+                  background: "rgba(200,140,20,0.12)",
+                  border: "1px solid rgba(200,140,40,0.3)",
+                  borderRadius: "50px",
+                  padding: "10px 28px",
+                  color: "rgba(220,180,80,0.7)",
+                  fontFamily: "Georgia, serif",
+                  fontSize: "13px",
+                  cursor: "pointer",
+                }}
+              >
+                ← Ver Mapa
+              </button>
+            </div>
+          </div>
+        ) : (
+          /* ── Quiz state ── */
+          <div className="px-6 py-6">
+            {/* Question */}
+            <p
+              style={{
+                fontFamily: "Georgia, serif",
+                fontSize: "15px",
+                color: "rgba(240,220,160,0.92)",
+                lineHeight: 1.65,
+                fontStyle: "italic",
+                marginBottom: "20px",
+                textAlign: "center",
+              }}
+            >
+              "{quiz.question}"
+            </p>
+
+            {/* Options */}
+            <div className="flex flex-col gap-2.5">
+              {quiz.options.map((opt) => {
+                const isSelected = selected === opt.key;
+                const isWrong = answered && !correct && isSelected;
+                return (
+                  <button
+                    key={opt.key}
+                    onClick={() => handleSelect(opt.key)}
+                    className="flex items-center gap-4 rounded-xl px-4 py-3 text-left transition-all duration-200 hover:scale-[1.01]"
+                    style={{
+                      background: isWrong
+                        ? "rgba(200,40,40,0.18)"
+                        : isSelected
+                        ? `rgba(${chapterColor === "#2196f3" ? "33,150,243" : "200,140,40"},0.18)`
+                        : "rgba(20,13,4,0.7)",
+                      border: isWrong
+                        ? "1px solid rgba(220,60,60,0.6)"
+                        : isSelected
+                        ? `1px solid ${chapterColor}70`
+                        : "1px solid rgba(200,140,40,0.15)",
+                      boxShadow: isSelected && !isWrong
+                        ? `0 0 16px ${chapterColor}20`
+                        : "none",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontFamily: "Georgia, serif",
+                        fontSize: "13px",
+                        fontWeight: "bold",
+                        color: isWrong
+                          ? "rgba(240,100,100,0.9)"
+                          : isSelected
+                          ? chapterColor
+                          : "rgba(200,160,80,0.6)",
+                        minWidth: "20px",
+                      }}
+                    >
+                      {opt.key})
+                    </span>
+                    <span
+                      style={{
+                        fontFamily: "Georgia, serif",
+                        fontSize: "13px",
+                        color: isWrong
+                          ? "rgba(240,180,180,0.88)"
+                          : isSelected
+                          ? "rgba(240,220,160,0.95)"
+                          : "rgba(220,190,130,0.75)",
+                      }}
+                    >
+                      {opt.text}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Error feedback */}
+            {showError && (
+              <p
+                className="text-center mt-3 text-sm"
+                style={{
+                  fontFamily: "Georgia, serif",
+                  color: "rgba(240,120,120,0.85)",
+                  animation: "fadeIn 0.3s ease",
+                }}
+              >
+                {quiz.errorMessage}
+              </p>
+            )}
+
+            {/* Confirm button */}
+            <div className="flex justify-center mt-5">
+              <button
+                onClick={handleConfirm}
+                disabled={!selected}
+                className="transition-all hover:scale-105 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100"
+                style={{
+                  background: selected
+                    ? `linear-gradient(135deg, ${chapterColor}35, ${chapterColor}18)`
+                    : "rgba(40,25,8,0.6)",
+                  border: `1px solid ${selected ? chapterColor + "60" : "rgba(200,140,40,0.2)"}`,
+                  borderRadius: "50px",
+                  padding: "10px 36px",
+                  color: selected ? "#f0d888" : "rgba(200,160,80,0.35)",
+                  fontFamily: "Georgia, serif",
+                  fontSize: "13px",
+                  cursor: selected ? "pointer" : "not-allowed",
+                  boxShadow: selected ? `0 0 20px ${chapterColor}15` : "none",
+                  letterSpacing: "0.06em",
+                }}
+              >
+                ✦ Confirmar Resposta ✦
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
   );
 }

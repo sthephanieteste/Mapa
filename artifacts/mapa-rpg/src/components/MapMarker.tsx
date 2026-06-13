@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
 import type { MapMarker } from "@/data/chapters";
+import { useProgress } from "@/hooks/useProgress";
 
 interface Props {
   marker: MapMarker;
@@ -11,9 +12,13 @@ export default function MapMarkerComponent({ marker }: Props) {
   const [transitioning, setTransitioning] = useState(false);
   const [fadeOut, setFadeOut] = useState(false);
   const [, navigate] = useLocation();
+  const { isUnlocked, isCompleted } = useProgress();
+
+  const unlocked = isUnlocked(marker.id);
+  const completed = isCompleted(marker.id);
 
   const handleClick = () => {
-    if (transitioning) return;
+    if (!unlocked || transitioning) return;
     setTransitioning(true);
     setFadeOut(false);
     setTimeout(() => setFadeOut(true), 900);
@@ -41,7 +46,6 @@ export default function MapMarkerComponent({ marker }: Props) {
             pointerEvents: "all",
           }}
         >
-          {/* Vignette rings */}
           <div
             style={{
               position: "absolute",
@@ -51,8 +55,6 @@ export default function MapMarkerComponent({ marker }: Props) {
               pointerEvents: "none",
             }}
           />
-
-          {/* Icon */}
           <div
             style={{
               fontSize: "56px",
@@ -63,8 +65,6 @@ export default function MapMarkerComponent({ marker }: Props) {
           >
             {marker.icon}
           </div>
-
-          {/* Location name */}
           <div
             style={{
               zIndex: 1,
@@ -98,8 +98,6 @@ export default function MapMarkerComponent({ marker }: Props) {
               ✦ viajando ✦
             </p>
           </div>
-
-          {/* Horizontal divider line */}
           <div
             style={{
               position: "absolute",
@@ -128,12 +126,13 @@ export default function MapMarkerComponent({ marker }: Props) {
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
+        {/* Tooltip */}
         {hovered && !transitioning && (
           <div
             className="absolute bottom-full left-1/2 mb-3 pointer-events-none"
             style={{
               transform: "translateX(-50%)",
-              width: "180px",
+              width: "190px",
               animation: "fadeInUp 0.15s ease",
             }}
           >
@@ -141,64 +140,119 @@ export default function MapMarkerComponent({ marker }: Props) {
               className="rounded-xl px-3 py-2.5 text-center"
               style={{
                 background: "rgba(10, 6, 2, 0.92)",
-                border: `1px solid ${marker.color}60`,
-                boxShadow: `0 4px 24px rgba(0,0,0,0.6), 0 0 12px ${marker.color}30`,
+                border: `1px solid ${unlocked ? marker.color + "60" : "rgba(120,90,30,0.4)"}`,
+                boxShadow: `0 4px 24px rgba(0,0,0,0.6)`,
                 backdropFilter: "blur(8px)",
               }}
             >
-              <p
-                className="text-xs font-bold mb-0.5 leading-tight"
-                style={{ color: marker.color, fontFamily: "Georgia, serif" }}
-              >
-                {marker.label}
-              </p>
-              <p
-                className="text-xs leading-snug"
-                style={{ color: "rgba(230,210,160,0.8)", fontFamily: "Georgia, serif" }}
-              >
-                {marker.shortDesc}
-              </p>
+              {unlocked ? (
+                <>
+                  <p
+                    className="text-xs font-bold mb-0.5 leading-tight"
+                    style={{ color: marker.color, fontFamily: "Georgia, serif" }}
+                  >
+                    {completed && <span style={{ marginRight: 4 }}>✅</span>}
+                    {marker.label}
+                  </p>
+                  <p
+                    className="text-xs leading-snug"
+                    style={{ color: "rgba(230,210,160,0.8)", fontFamily: "Georgia, serif" }}
+                  >
+                    {marker.shortDesc}
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p
+                    className="text-xs font-bold mb-0.5"
+                    style={{ color: "rgba(160,120,50,0.7)", fontFamily: "Georgia, serif" }}
+                  >
+                    🔒 Bloqueado
+                  </p>
+                  <p
+                    className="text-xs"
+                    style={{ color: "rgba(160,120,50,0.5)", fontFamily: "Georgia, serif" }}
+                  >
+                    Conclua o capítulo anterior para desbloquear.
+                  </p>
+                </>
+              )}
             </div>
             <div
               className="mx-auto w-0 h-0"
               style={{
                 borderLeft: "6px solid transparent",
                 borderRight: "6px solid transparent",
-                borderTop: `6px solid ${marker.color}60`,
+                borderTop: `6px solid ${unlocked ? marker.color + "60" : "rgba(120,90,30,0.4)"}`,
               }}
             />
           </div>
         )}
 
+        {/* Button */}
         <button
           onClick={handleClick}
+          disabled={!unlocked}
           className="relative flex items-center justify-center rounded-full transition-all duration-200 focus:outline-none"
           style={{
-            width: hovered ? "52px" : "44px",
-            height: hovered ? "52px" : "44px",
-            background: hovered
-              ? `radial-gradient(circle, ${marker.color}30 0%, ${marker.color}15 100%)`
-              : `radial-gradient(circle, ${marker.color}20 0%, transparent 100%)`,
-            border: `2px solid ${hovered ? marker.color : marker.color + "80"}`,
-            boxShadow: hovered
-              ? `0 0 0 4px ${marker.color}25, 0 0 20px ${marker.color}40, inset 0 0 12px ${marker.color}10`
-              : `0 0 8px ${marker.color}30`,
-            cursor: "pointer",
+            width: hovered && unlocked ? "52px" : "44px",
+            height: hovered && unlocked ? "52px" : "44px",
+            background: unlocked
+              ? hovered
+                ? `radial-gradient(circle, ${marker.color}30 0%, ${marker.color}15 100%)`
+                : `radial-gradient(circle, ${marker.color}20 0%, transparent 100%)`
+              : "radial-gradient(circle, rgba(40,30,10,0.6) 0%, rgba(20,15,5,0.3) 100%)",
+            border: unlocked
+              ? `2px solid ${hovered ? marker.color : marker.color + "80"}`
+              : "2px solid rgba(100,75,25,0.4)",
+            boxShadow: unlocked
+              ? hovered
+                ? `0 0 0 4px ${marker.color}25, 0 0 20px ${marker.color}40`
+                : `0 0 8px ${marker.color}30`
+              : "none",
+            cursor: unlocked ? "pointer" : "not-allowed",
+            filter: unlocked ? "none" : "grayscale(0.8) brightness(0.5)",
+            opacity: unlocked ? 1 : 0.55,
           }}
           aria-label={marker.label}
         >
-          <span style={{ fontSize: hovered ? "22px" : "18px", transition: "font-size 0.2s ease" }}>
-            {marker.icon}
+          {/* Icon */}
+          <span
+            style={{
+              fontSize: hovered && unlocked ? "22px" : "18px",
+              transition: "font-size 0.2s ease",
+            }}
+          >
+            {unlocked ? marker.icon : "🔒"}
           </span>
 
-          <span
-            className="absolute inset-0 rounded-full"
-            style={{
-              animation: "ping 2s cubic-bezier(0,0,0.2,1) infinite",
-              background: `${marker.color}20`,
-              border: `1px solid ${marker.color}40`,
-            }}
-          />
+          {/* Completed checkmark badge */}
+          {completed && (
+            <span
+              style={{
+                position: "absolute",
+                top: "-4px",
+                right: "-4px",
+                fontSize: "12px",
+                lineHeight: 1,
+                filter: "drop-shadow(0 0 4px rgba(80,200,80,0.8))",
+              }}
+            >
+              ✅
+            </span>
+          )}
+
+          {/* Ping ring — only for unlocked */}
+          {unlocked && (
+            <span
+              className="absolute inset-0 rounded-full"
+              style={{
+                animation: "ping 2s cubic-bezier(0,0,0.2,1) infinite",
+                background: `${marker.color}20`,
+                border: `1px solid ${marker.color}40`,
+              }}
+            />
+          )}
         </button>
       </div>
     </>
