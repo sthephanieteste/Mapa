@@ -1,0 +1,19 @@
+uploads = []
+
+[[generated]]
+id = "uHOVvMxXQSjPX7vUBNXsm"
+uri = "file://artifacts/mapa-rpg/public/mapa-final.png"
+type = "image"
+title = "rpg fantasy map parana brazil"
+
+[[generated]]
+id = "otxlzulcOPk6_7JYJrT7W"
+uri = "file://artifacts/mapa-rpg/public/mapa-rpg-illustration.png"
+type = "image"
+title = "rpg-world-brazil-cinematic"
+
+[[outputs]]
+id = "CPGwXY_sBomQiK26T8GQp"
+uri = "file://artifacts/mapa-rpg/public/mapa-rpg-illustration.png"
+type = "image"
+title = "Mapa RPG Gerado"
