@@ -5,6 +5,7 @@ import Avatar from "@/components/Avatar";
 import { useProgress } from "@/hooks/useProgress";
 import { getQuiz } from "@/data/quizStorage";
 import AvatarQuiz from "@/components/AvatarQuiz";
+import AvatarQuizViagem from "@/components/AvatarQuizViagem";
 
 function PlaceholderImage({ caption }: { caption: string }) {
   return (
@@ -369,6 +370,16 @@ export default function ChapterPage() {
         {/* ── QUIZ ── */}
         {chapter.id === "rio-de-janeiro" ? (
           <AvatarQuiz
+            chapterId={chapter.id}
+            chapterColor={chapter.color}
+            isCompleted={isCompleted(chapter.id)}
+            completeChapter={completeChapter}
+            nextChapterId={nextChapter(chapter.id)}
+            onNavigateNext={(id) => navigate(`/chapter/${id}`)}
+            onNavigateMap={() => navigate("/map")}
+          />
+        ) : chapter.id === "a-viagem" ? (
+          <AvatarQuizViagem
             chapterId={chapter.id}
             chapterColor={chapter.color}
             isCompleted={isCompleted(chapter.id)}
