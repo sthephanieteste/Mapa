@@ -1,6 +1,7 @@
 import { MAP_MARKERS } from "@/data/chapters";
 import MapMarkerComponent from "@/components/MapMarker";
 import GameHUD from "@/components/GameHUD";
+import CloudLayer from "@/components/CloudLayer";
 
 export default function MapPage() {
   return (
@@ -15,6 +16,9 @@ export default function MapPage() {
         className="w-full h-full object-cover select-none"
         draggable={false}
       />
+
+      {/* ── CLOUD LAYER — locked regions covered with fog ── */}
+      <CloudLayer />
 
       {/* ── MAP MARKERS — UNTOUCHED ── */}
       <div className="absolute inset-0">
