@@ -216,7 +216,7 @@ export default function ChapterPage() {
         {/* ── GALERIA DE FOTOS ── */}
         <section>
           <SectionTitle icon="📷" label="Galeria de Fotos" color={chapter.color} />
-          {chapter.id === "rio-de-janeiro" && !isCompleted(chapter.id) ? (
+          {!isCompleted(chapter.id) ? (
             <LockedContent color={chapter.color} />
           ) : hasPhotos ? (
             <div className="grid grid-cols-2 gap-3 mt-4">
@@ -321,7 +321,7 @@ export default function ChapterPage() {
         {/* ── MENSAGENS ── */}
         <section>
           <SectionTitle icon="💌" label="Mensagens" color={chapter.color} />
-          {chapter.id === "rio-de-janeiro" && !isCompleted(chapter.id) ? (
+          {!isCompleted(chapter.id) ? (
             <LockedContent color={chapter.color} />
           ) : (
           <div className="mt-4 space-y-4">
