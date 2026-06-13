@@ -12,6 +12,18 @@ uri = "file://artifacts/mapa-rpg/public/mapa-rpg-illustration.png"
 type = "image"
 title = "rpg-landscape-golden-v9"
 
+[[generated]]
+id = "aIsBczxYXn6zad4ofLvEh"
+uri = "file://artifacts/mapa-rpg/public/avatar-char1.png"
+type = "image"
+title = "rpg-char1-portrait"
+
+[[generated]]
+id = "RZLdzTEi3gNh3Lsj4rzp6"
+uri = "file://artifacts/mapa-rpg/public/avatar-char2.png"
+type = "image"
+title = "rpg-char2-portrait"
+
 [[outputs]]
 id = "CPGwXY_sBomQiK26T8GQp"
 uri = "file://artifacts/mapa-rpg/public/mapa-rpg-illustration.png"
