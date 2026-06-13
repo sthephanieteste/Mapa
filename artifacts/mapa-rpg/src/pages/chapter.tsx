@@ -1,6 +1,7 @@
 import { useParams, useLocation } from "wouter";
 import { CHAPTERS } from "@/data/chapters";
 import { useState } from "react";
+import Avatar from "@/components/Avatar";
 
 function PlaceholderImage({ caption }: { caption: string }) {
   return (
@@ -74,7 +75,13 @@ export default function ChapterPage() {
   const hasVideos = chapter.videos.length > 0;
 
   return (
-    <div className="min-h-screen" style={{ background: "linear-gradient(180deg, #0d0905 0%, #110c06 100%)" }}>
+    <div
+      className="min-h-screen"
+      style={{
+        background: "linear-gradient(180deg, #0d0905 0%, #110c06 100%)",
+        animation: "fadeIn 0.4s ease",
+      }}
+    >
 
       {/* ── HERO ── */}
       <div
@@ -109,12 +116,13 @@ export default function ChapterPage() {
                 background: `linear-gradient(135deg, ${chapter.color}25, ${chapter.color}10)`,
                 border: `1.5px solid ${chapter.color}50`,
                 boxShadow: `0 0 24px ${chapter.color}25`,
+                animation: "float 3s ease-in-out infinite",
               }}
             >
               {chapter.icon}
             </div>
 
-            <div>
+            <div className="flex-1">
               <p
                 className="text-xs uppercase tracking-widest mb-1"
                 style={{ color: `${chapter.color}90`, fontFamily: "Georgia, serif" }}
@@ -138,6 +146,44 @@ export default function ChapterPage() {
                 {chapter.description}
               </p>
             </div>
+          </div>
+
+          {/* ── Character avatars in chapter ── */}
+          <div
+            className="mt-6 flex items-center gap-3 rounded-xl px-4 py-3"
+            style={{
+              background: "rgba(10,6,2,0.6)",
+              border: `1px solid ${chapter.color}20`,
+              backdropFilter: "blur(8px)",
+              display: "inline-flex",
+            }}
+          >
+            <div
+              style={{
+                borderRadius: "50%",
+                padding: "2px",
+                background: `linear-gradient(135deg, #c49a3c80, #c49a3c20)`,
+                boxShadow: "0 0 10px rgba(196,154,60,0.35)",
+              }}
+            >
+              <Avatar character={1} size={34} />
+            </div>
+            <div
+              style={{
+                borderRadius: "50%",
+                padding: "2px",
+                background: "linear-gradient(135deg, #e8404080, #e8404020)",
+                boxShadow: "0 0 10px rgba(232,64,64,0.35)",
+              }}
+            >
+              <Avatar character={2} size={34} />
+            </div>
+            <span
+              className="text-xs"
+              style={{ color: "rgba(220,180,100,0.7)", fontFamily: "Georgia, serif", fontStyle: "italic" }}
+            >
+              ❤️ Neste capítulo juntos
+            </span>
           </div>
         </div>
       </div>

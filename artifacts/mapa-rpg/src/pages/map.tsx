@@ -1,5 +1,6 @@
 import { MAP_MARKERS } from "@/data/chapters";
 import MapMarkerComponent from "@/components/MapMarker";
+import GameHUD from "@/components/GameHUD";
 
 export default function MapPage() {
   return (
@@ -7,6 +8,7 @@ export default function MapPage() {
       className="relative w-screen h-screen overflow-hidden"
       style={{ background: "#0a0704" }}
     >
+      {/* ── BACKGROUND MAP — UNTOUCHED ── */}
       <img
         src={`${import.meta.env.BASE_URL}mapa-rpg-illustration.png`}
         alt="Mapa RPG"
@@ -14,12 +16,17 @@ export default function MapPage() {
         draggable={false}
       />
 
+      {/* ── MAP MARKERS — UNTOUCHED ── */}
       <div className="absolute inset-0">
         {MAP_MARKERS.map((marker) => (
           <MapMarkerComponent key={marker.id} marker={marker} />
         ))}
       </div>
 
+      {/* ── GAME HUD — NEW LAYER ON TOP ── */}
+      <GameHUD />
+
+      {/* ── HINT LABEL ── */}
       <div
         className="absolute bottom-4 right-4 text-xs px-3 py-1.5 rounded-full select-none"
         style={{
