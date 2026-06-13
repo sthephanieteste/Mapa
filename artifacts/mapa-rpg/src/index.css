@@ -480,6 +480,38 @@
   100% { width: clamp(160px, 30vw, 320px); }
 }
 
+/* ── Unlock celebration ────────────────────────── */
+@keyframes celebFlash {
+  0%   { transform: scale(0.2); opacity: 1; }
+  60%  { transform: scale(1.6); opacity: 0.85; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+@keyframes celebRing {
+  0%   { transform: scale(0.5); opacity: 0.9; }
+  100% { transform: scale(8);   opacity: 0; }
+}
+
+@keyframes celebParticle {
+  0%   { transform: translate(0, 0)                      scale(1);   opacity: 1; }
+  70%  { transform: translate(var(--pdx), var(--pdy))    scale(0.8); opacity: 0.9; }
+  100% { transform: translate(calc(var(--pdx) * 1.25), calc(var(--pdy) * 1.25)) scale(0); opacity: 0; }
+}
+
+@keyframes celebStar {
+  0%   { transform: translate(0, 0)                      scale(0.3) rotate(0deg);   opacity: 0; }
+  20%  { opacity: 1; }
+  80%  { transform: translate(var(--stx), var(--sty))    scale(1.2) rotate(180deg); opacity: 0.9; }
+  100% { transform: translate(calc(var(--stx)*1.2), calc(var(--sty)*1.2)) scale(0) rotate(240deg); opacity: 0; }
+}
+
+@keyframes celebGlow {
+  0%   { transform: scale(0.6); opacity: 0.8; }
+  30%  { transform: scale(1.2); opacity: 1;   }
+  100% { transform: scale(1.8); opacity: 0;   }
+}
+
+/* ── Cloud animations ──────────────────────────── */
 @keyframes cloudDrift {
   0%   { transform: translate(0px,  0px) scale(1);    }
   33%  { transform: translate(6px, -4px) scale(1.01); }

@@ -2,6 +2,7 @@ import { MAP_MARKERS } from "@/data/chapters";
 import MapMarkerComponent from "@/components/MapMarker";
 import GameHUD from "@/components/GameHUD";
 import CloudLayer from "@/components/CloudLayer";
+import UnlockCelebration from "@/components/UnlockCelebration";
 
 export default function MapPage() {
   return (
@@ -26,6 +27,9 @@ export default function MapPage() {
           <MapMarkerComponent key={marker.id} marker={marker} />
         ))}
       </div>
+
+      {/* ── UNLOCK CELEBRATION — particles + glow burst ── */}
+      <UnlockCelebration />
 
       {/* ── GAME HUD — NEW LAYER ON TOP ── */}
       <GameHUD />
