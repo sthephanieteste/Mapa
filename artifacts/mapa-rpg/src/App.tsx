@@ -6,6 +6,7 @@ import WelcomePage from "@/pages/welcome";
 import MapPage from "@/pages/map";
 import ChapterPage from "@/pages/chapter";
 import AdminPage from "@/pages/admin";
+import MusicPlayer from "@/components/MusicPlayer";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,7 @@ function App() {
         <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
           <Router />
         </WouterRouter>
+        <MusicPlayer />
         <Toaster />
       </TooltipProvider>
     </QueryClientProvider>
