@@ -22,8 +22,44 @@ export default function GameHUD() {
           minHeight: "72px",
         }}
       >
-        {/* ── Character 1 ── */}
-        <CharBadge character={1} name="Você" color="#c49a3c" />
+        {/* ── Characters side by side — no labels ── */}
+        <div className="flex items-center gap-1.5 flex-shrink-0">
+          {/* Char 1 */}
+          <div
+            style={{
+              borderRadius: "50%",
+              padding: "2px",
+              background: "linear-gradient(135deg, rgba(196,154,60,0.75), rgba(196,154,60,0.15))",
+              boxShadow: "0 0 14px rgba(196,154,60,0.35)",
+            }}
+          >
+            <Avatar character={1} size={44} />
+          </div>
+
+          {/* tiny heart between them */}
+          <span
+            style={{
+              fontSize: "11px",
+              filter: "drop-shadow(0 0 4px rgba(232,64,64,0.7))",
+              animation: "pulse-heart 1.8s ease-in-out infinite",
+              lineHeight: 1,
+            }}
+          >
+            ❤️
+          </span>
+
+          {/* Char 2 */}
+          <div
+            style={{
+              borderRadius: "50%",
+              padding: "2px",
+              background: "linear-gradient(135deg, rgba(232,64,64,0.75), rgba(232,64,64,0.15))",
+              boxShadow: "0 0 14px rgba(232,64,64,0.3)",
+            }}
+          >
+            <Avatar character={2} size={44} />
+          </div>
+        </div>
 
         {/* ── Divider ── */}
         <div
@@ -50,7 +86,7 @@ export default function GameHUD() {
             <span style={{ color: "rgba(200,140,40,0.5)", fontSize: "10px" }}>✦</span>
           </div>
 
-          {/* XP Bar + Level + Status */}
+          {/* XP Bar + Level */}
           <div className="flex items-center gap-3 w-full max-w-sm">
             {/* Level badge */}
             <div
@@ -61,10 +97,7 @@ export default function GameHUD() {
                 minWidth: 48,
               }}
             >
-              <span
-                className="text-xs font-bold"
-                style={{ color: "#e8c060", fontFamily: "Georgia, serif" }}
-              >
+              <span className="text-xs font-bold" style={{ color: "#e8c060", fontFamily: "Georgia, serif" }}>
                 Lv.{LEVEL}
               </span>
             </div>
@@ -83,13 +116,11 @@ export default function GameHUD() {
                   className="absolute inset-y-0 left-0 rounded-full"
                   style={{
                     width: `${xpPercent}%`,
-                    background:
-                      "linear-gradient(90deg, #c49a3c 0%, #f0d060 50%, #c49a3c 100%)",
+                    background: "linear-gradient(90deg, #c49a3c 0%, #f0d060 50%, #c49a3c 100%)",
                     boxShadow: "0 0 8px rgba(200,160,40,0.6)",
                     transition: "width 1s ease",
                   }}
                 />
-                {/* Shimmer overlay */}
                 <div
                   className="absolute inset-0 rounded-full"
                   style={{
@@ -101,23 +132,17 @@ export default function GameHUD() {
                 />
               </div>
               <div className="flex justify-between">
-                <span
-                  className="text-xs"
-                  style={{ color: "rgba(200,160,80,0.5)", fontFamily: "Georgia, serif", fontSize: "9px" }}
-                >
+                <span style={{ color: "rgba(200,160,80,0.5)", fontFamily: "Georgia, serif", fontSize: "9px" }}>
                   {XP_CURRENT.toLocaleString()} XP
                 </span>
-                <span
-                  className="text-xs"
-                  style={{ color: "rgba(200,160,80,0.35)", fontFamily: "Georgia, serif", fontSize: "9px" }}
-                >
+                <span style={{ color: "rgba(200,160,80,0.35)", fontFamily: "Georgia, serif", fontSize: "9px" }}>
                   {XP_NEXT.toLocaleString()} XP
                 </span>
               </div>
             </div>
           </div>
 
-          {/* Status */}
+          {/* Status + Conquistas */}
           <div className="flex items-center gap-1.5">
             <span
               className="inline-block rounded-full"
@@ -154,74 +179,16 @@ export default function GameHUD() {
                 letterSpacing: "0.06em",
                 cursor: "pointer",
               }}
-              title="Ver Conquistas"
             >
               🏆 Conquistas
             </button>
           </div>
         </div>
-
-        {/* ── Divider ── */}
-        <div
-          className="hidden sm:block w-px self-stretch"
-          style={{ background: "rgba(200,140,40,0.2)", marginTop: 6, marginBottom: 6 }}
-        />
-
-        {/* ── Character 2 ── */}
-        <CharBadge character={2} name="Ela" color="#e84040" flip />
       </div>
 
       {showAchievements && (
         <AchievementsPanel onClose={() => setShowAchievements(false)} />
       )}
     </>
-  );
-}
-
-function CharBadge({
-  character,
-  name,
-  color,
-  flip = false,
-}: {
-  character: 1 | 2;
-  name: string;
-  color: string;
-  flip?: boolean;
-}) {
-  return (
-    <div
-      className={`flex items-center gap-2 flex-shrink-0 ${flip ? "flex-row-reverse" : ""}`}
-    >
-      <div
-        className="relative"
-        style={{
-          borderRadius: "50%",
-          padding: "2px",
-          background: `linear-gradient(135deg, ${color}80, ${color}20)`,
-          boxShadow: `0 0 14px ${color}40`,
-        }}
-      >
-        <Avatar character={character} size={44} style={{ display: "block" }} />
-      </div>
-      <div className={`flex flex-col ${flip ? "items-end" : "items-start"}`}>
-        <span
-          className="text-xs font-bold"
-          style={{ color, fontFamily: "Georgia, serif", fontSize: "11px" }}
-        >
-          {name}
-        </span>
-        <span
-          className="text-xs"
-          style={{
-            color: "rgba(200,160,80,0.5)",
-            fontFamily: "Georgia, serif",
-            fontSize: "9px",
-          }}
-        >
-          Aventureira
-        </span>
-      </div>
-    </div>
   );
 }

@@ -60,7 +60,7 @@ export default function ChapterPage() {
         <div className="text-center">
           <p className="text-2xl mb-4" style={{ color: "rgba(200,160,80,0.7)" }}>Local não encontrado</p>
           <button
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/map")}
             className="px-6 py-2 rounded-full text-sm"
             style={{ background: "rgba(200,130,20,0.3)", border: "1px solid rgba(200,140,40,0.5)", color: "#e8c060" }}
           >
@@ -101,7 +101,7 @@ export default function ChapterPage() {
 
         <div className="relative max-w-4xl mx-auto px-6 pt-8 pb-10">
           <button
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/map")}
             className="flex items-center gap-2 text-sm mb-8 transition-opacity hover:opacity-70"
             style={{ color: "rgba(200,160,80,0.7)", fontFamily: "Georgia, serif" }}
           >
@@ -341,7 +341,7 @@ export default function ChapterPage() {
         {/* ── NAV BOTTOM ── */}
         <div className="flex justify-center pt-4 pb-8">
           <button
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/map")}
             className="flex items-center gap-2 px-8 py-3 rounded-full text-sm font-medium transition-all hover:scale-105"
             style={{
               background: `linear-gradient(135deg, ${chapter.color}25, ${chapter.color}10)`,
