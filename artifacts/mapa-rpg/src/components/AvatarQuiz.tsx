@@ -111,7 +111,7 @@ function WrongAvatar({
           className="hover:scale-105 hover:shadow-red-glow"
         >
           <img
-            src={`${BASE}avatar-char1.png`}
+            src={`${BASE}avatar-char2.png`}
             alt="avatar"
             style={{ width: "100%", height: "100%", objectFit: "cover", pointerEvents: "none", userSelect: "none" }}
             draggable={false}
@@ -170,7 +170,7 @@ function CorrectAvatar({
           className="hover:scale-105"
         >
           <img
-            src={`${BASE}avatar-char2.png`}
+            src={`${BASE}avatar-char1.png`}
             alt="avatar"
             style={{ width: "100%", height: "100%", objectFit: "cover", pointerEvents: "none", userSelect: "none" }}
             draggable={false}
