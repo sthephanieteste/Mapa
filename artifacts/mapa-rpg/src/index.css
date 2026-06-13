@@ -454,3 +454,28 @@
   0%, 100% { transform: translateY(0px); }
   50%       { transform: translateY(-4px); }
 }
+
+@keyframes travelFadeIn {
+  0%   { background: rgba(4,2,1,0); }
+  100% { background: rgba(4,2,1,0.93); }
+}
+
+@keyframes travelFadeOut {
+  0%   { background: rgba(4,2,1,0.93); opacity: 1; }
+  100% { background: rgba(4,2,1,0.93); opacity: 0; }
+}
+
+@keyframes travelIconFloat {
+  0%   { opacity: 0; transform: scale(0.6) translateY(12px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes travelTextRise {
+  0%   { opacity: 0; transform: translateY(16px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes travelLineExpand {
+  0%   { width: 0; }
+  100% { width: clamp(160px, 30vw, 320px); }
+}

@@ -18,7 +18,6 @@ function getAudio(): HTMLAudioElement {
 
 export default function MusicPlayer() {
   const [playing, setPlaying] = useState(false);
-  const [hover, setHover] = useState(false);
   const fadeRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const startedRef = useRef(false);
 
@@ -112,32 +111,10 @@ export default function MusicPlayer() {
         top: "14px",
         right: "16px",
         zIndex: 100,
-        display: "flex",
-        alignItems: "center",
-        gap: "6px",
       }}
     >
-      {hover && (
-        <span
-          style={{
-            color: "rgba(230,180,100,0.75)",
-            fontFamily: "Georgia, serif",
-            fontSize: "10px",
-            letterSpacing: "0.06em",
-            whiteSpace: "nowrap",
-            textShadow: "0 0 8px rgba(200,140,20,0.5)",
-            animation: "fadeIn 0.2s ease",
-            pointerEvents: "none",
-          }}
-        >
-          🎵 Nossa Música
-        </span>
-      )}
-
       <button
         onClick={toggle}
-        onMouseEnter={() => setHover(true)}
-        onMouseLeave={() => setHover(false)}
         title={playing ? "Pausar música" : "Tocar música"}
         style={{
           background: playing
