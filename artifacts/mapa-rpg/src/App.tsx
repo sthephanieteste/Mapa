@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import MapPage from "@/pages/map";
 import ChapterPage from "@/pages/chapter";
+import AdminPage from "@/pages/admin";
 
 const queryClient = new QueryClient();
 
@@ -12,6 +13,7 @@ function Router() {
     <Switch>
       <Route path="/" component={MapPage} />
       <Route path="/chapter/:id" component={ChapterPage} />
+      <Route path="/admin" component={AdminPage} />
     </Switch>
   );
 }
