@@ -4,6 +4,7 @@ import { useState } from "react";
 import Avatar from "@/components/Avatar";
 import { useProgress } from "@/hooks/useProgress";
 import { getQuiz } from "@/data/quizStorage";
+import AvatarQuiz from "@/components/AvatarQuiz";
 
 function PlaceholderImage({ caption }: { caption: string }) {
   return (
@@ -45,6 +46,24 @@ function PlaceholderVideo({ title }: { title: string }) {
         </p>
         <p className="text-xs mt-1" style={{ color: "rgba(180,140,60,0.5)" }}>Adicione o vídeo aqui</p>
       </div>
+    </div>
+  );
+}
+
+function LockedContent({ color }: { color: string }) {
+  return (
+    <div
+      className="mt-4 flex flex-col items-center gap-3 py-8 rounded-xl"
+      style={{
+        background: "rgba(10,6,2,0.6)",
+        border: `1px dashed ${color}30`,
+        animation: "fadeIn 0.3s ease",
+      }}
+    >
+      <div style={{ fontSize: "28px", filter: "drop-shadow(0 0 8px rgba(200,140,40,0.3))" }}>🔒</div>
+      <p style={{ fontFamily: "Georgia, serif", fontSize: "13px", color: "rgba(180,140,60,0.55)", textAlign: "center" }}>
+        Responda o Desafio do Capítulo para desbloquear.
+      </p>
     </div>
   );
 }
@@ -197,7 +216,9 @@ export default function ChapterPage() {
         {/* ── GALERIA DE FOTOS ── */}
         <section>
           <SectionTitle icon="📷" label="Galeria de Fotos" color={chapter.color} />
-          {hasPhotos ? (
+          {chapter.id === "rio-de-janeiro" && !isCompleted(chapter.id) ? (
+            <LockedContent color={chapter.color} />
+          ) : hasPhotos ? (
             <div className="grid grid-cols-2 gap-3 mt-4">
               {chapter.photos.map((photo, idx) => (
                 <button
@@ -300,6 +321,9 @@ export default function ChapterPage() {
         {/* ── MENSAGENS ── */}
         <section>
           <SectionTitle icon="💌" label="Mensagens" color={chapter.color} />
+          {chapter.id === "rio-de-janeiro" && !isCompleted(chapter.id) ? (
+            <LockedContent color={chapter.color} />
+          ) : (
           <div className="mt-4 space-y-4">
             {chapter.messages.map((msg) => (
               <div
@@ -339,18 +363,31 @@ export default function ChapterPage() {
               </div>
             ))}
           </div>
+          )}
         </section>
 
         {/* ── QUIZ ── */}
-        <QuizSection
-          chapterId={chapter.id}
-          chapterColor={chapter.color}
-          isCompleted={isCompleted(chapter.id)}
-          completeChapter={completeChapter}
-          nextChapterId={nextChapter(chapter.id)}
-          onNavigateNext={(id) => navigate(`/chapter/${id}`)}
-          onNavigateMap={() => navigate("/map")}
-        />
+        {chapter.id === "rio-de-janeiro" ? (
+          <AvatarQuiz
+            chapterId={chapter.id}
+            chapterColor={chapter.color}
+            isCompleted={isCompleted(chapter.id)}
+            completeChapter={completeChapter}
+            nextChapterId={nextChapter(chapter.id)}
+            onNavigateNext={(id) => navigate(`/chapter/${id}`)}
+            onNavigateMap={() => navigate("/map")}
+          />
+        ) : (
+          <QuizSection
+            chapterId={chapter.id}
+            chapterColor={chapter.color}
+            isCompleted={isCompleted(chapter.id)}
+            completeChapter={completeChapter}
+            nextChapterId={nextChapter(chapter.id)}
+            onNavigateNext={(id) => navigate(`/chapter/${id}`)}
+            onNavigateMap={() => navigate("/map")}
+          />
+        )}
 
         {/* ── NAV BOTTOM ── */}
         <div className="flex justify-center pt-2 pb-8">

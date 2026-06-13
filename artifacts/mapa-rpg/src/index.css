@@ -511,6 +511,45 @@
   100% { transform: scale(1.8); opacity: 0;   }
 }
 
+/* ── Avatar Quiz animations ────────────────────── */
+@keyframes avatarEscape {
+  0%   { transform: scale(1) rotate(0deg) translate(0, 0);   opacity: 1;   }
+  30%  { transform: scale(1.3) rotate(-15deg) translate(0, -12px); opacity: 1; }
+  70%  { transform: scale(0.5) rotate(30deg) translate(60px, -80px); opacity: 0.6; }
+  100% { transform: scale(0) rotate(60deg) translate(120px, -160px); opacity: 0; }
+}
+
+@keyframes avatarLand {
+  0%   { transform: scale(0) rotate(-40deg); opacity: 0; }
+  60%  { transform: scale(1.2) rotate(5deg);  opacity: 1; }
+  80%  { transform: scale(0.9) rotate(-2deg); }
+  100% { transform: scale(1) rotate(0deg);   opacity: 1; }
+}
+
+@keyframes avatarFloat {
+  0%   { transform: translateY(0px) rotate(0deg);   }
+  25%  { transform: translateY(-6px) rotate(-2deg); }
+  75%  { transform: translateY(4px) rotate(2deg);   }
+  100% { transform: translateY(0px) rotate(0deg);   }
+}
+
+@keyframes avatarVictory {
+  0%   { transform: scale(1) rotate(0deg);   }
+  20%  { transform: scale(1.2) rotate(-5deg); }
+  40%  { transform: scale(1.15) rotate(5deg); }
+  60%  { transform: scale(1.18) rotate(-3deg); }
+  80%  { transform: scale(1.1) rotate(2deg);  }
+  100% { transform: scale(1) rotate(0deg);   }
+}
+
+@keyframes avatarShake {
+  0%,100% { transform: translateX(0); }
+  20%  { transform: translateX(-8px) rotate(-4deg); }
+  40%  { transform: translateX(8px) rotate(4deg);  }
+  60%  { transform: translateX(-5px) rotate(-2deg); }
+  80%  { transform: translateX(5px) rotate(2deg);  }
+}
+
 /* ── Cloud animations ──────────────────────────── */
 @keyframes cloudDrift {
   0%   { transform: translate(0px,  0px) scale(1);    }
