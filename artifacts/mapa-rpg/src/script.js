@@ -106,6 +106,21 @@ const DADOS_PINS = {
   },
 
   /* ──────────────────────────────────────────────
+     CRISTO DE CORNÉLIO PROCÓPIO — coloque as fotos em:
+     public/assets/fotos/cristo-cornelio/
+  ────────────────────────────────────────────── */
+  'cristo-cornelio': {
+    titulo:  'Cristo de Cornélio Procópio',
+    icone:   '✝️',
+    texto:   'Foi aqui, aos pés desta estátua, que nossa história mudou para sempre. O lugar onde o pedido aconteceu — um momento que a gente nunca vai esquecer.',
+    contador: false,
+    fotos: [
+      { src: '/assets/fotos/cristo-cornelio/foto1.jpg', legenda: 'O dia do pedido ❤️' },
+      { src: '/assets/fotos/cristo-cornelio/foto2.jpg', legenda: 'Cornélio Procópio' },
+    ],
+  },
+
+  /* ──────────────────────────────────────────────
      UTFPR GUARAPUAVA — coloque as fotos em:
      public/assets/fotos/utfpr-guarapuava/
   ────────────────────────────────────────────── */
