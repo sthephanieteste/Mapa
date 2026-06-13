@@ -2,8 +2,8 @@ import { useParams, useLocation } from "wouter";
 import { CHAPTERS } from "@/data/chapters";
 import { useState } from "react";
 import Avatar from "@/components/Avatar";
-import { QUIZZES } from "@/data/progression";
 import { useProgress } from "@/hooks/useProgress";
+import { getQuiz } from "@/data/quizStorage";
 
 function PlaceholderImage({ caption }: { caption: string }) {
   return (
@@ -473,7 +473,7 @@ function QuizSection({
   onNavigateNext: (id: string) => void;
   onNavigateMap: () => void;
 }) {
-  const quiz = QUIZZES[chapterId];
+  const quiz = getQuiz(chapterId);
   const [selected, setSelected] = useState<string | null>(null);
   const [answered, setAnswered] = useState(false);
   const [correct, setCorrect] = useState(false);
