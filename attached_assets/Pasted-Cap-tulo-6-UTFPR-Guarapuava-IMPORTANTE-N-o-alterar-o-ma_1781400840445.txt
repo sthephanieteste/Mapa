@@ -1,0 +1,226 @@
+Capítulo 6 — UTFPR Guarapuava
+
+IMPORTANTE:
+
+Não alterar o mapa.
+Não alterar os outros capítulos.
+Não alterar a música.
+Criar apenas a experiência deste capítulo.
+
+Tema:
+
+❤️ Missão: Sobreviver ao Frio de Guarapuava
+
+Objetivo:
+
+Transformar esta memória em um mini jogo interativo.
+
+A usuária deve aumentar a barra de calor até 100%.
+
+---
+
+TELA INICIAL
+
+Mostrar:
+
+📍 UTFPR Guarapuava
+
+🌨️ Uma das noites mais frias da nossa aventura.
+
+Status da missão:
+
+Sobreviver ao frio.
+
+Objetivo secundário:
+
+Tentar não morrer congelada.
+
+Barra inicial:
+
+🌡️ Calor
+
+██░░░░░░░░░ 20%
+
+Objetivo:
+
+Aumentar o calor para 100%.
+
+Botão:
+
+✨ Iniciar Missão
+
+---
+
+MECÂNICA
+
+Mostrar os itens disponíveis:
+
+🧣 Cobertor
+🤗 Abraço
+💆 Carinho
+😴 Dormir
+
+Cada item pode ser clicado.
+
+Ao clicar:
+
+- Atualizar a barra de calor.
+- Mostrar animação de ganho ou perda.
+- Exibir a mensagem correspondente.
+
+---
+
+ITEM 1 — 🧣 Cobertor
+
+Ao clicar:
+
++20 Calor
+
+Texto:
+
+"Naquele momento qualquer fonte de calor era bem-vinda.
+
+Talvez não resolvesse tudo.
+
+Mas definitivamente ajudou a diminuir minhas chances de virar uma atração turística congelada de Guarapuava."
+
+Atualizar barra.
+
+---
+
+ITEM 2 — 🤗 Abraço
+
+Ao clicar:
+
++35 Calor
+
+Texto:
+
+"Entre todas as soluções daquela noite, essa foi a mais eficiente.
+
+Não sei se existe alguma explicação científica.
+
+Mas eu lembro que toda vez que você me abraçava eu me sentia um pouco melhor."
+
+Atualizar barra.
+
+---
+
+ITEM 3 — 💆 Carinho
+
+Ao clicar:
+
++25 Calor
+
+Texto:
+
+"Eu estava cansada.
+
+Mal conseguia descansar direito.
+
+E você ficou fazendo carinho até eu conseguir dormir.
+
+Talvez para você tenha sido apenas um gesto simples.
+
+Mas eu nunca esqueci."
+
+Atualizar barra.
+
+---
+
+ITEM 4 — 😴 Dormir
+
+Este item deve estar disponível desde o início.
+
+Ao clicar:
+
+-20 Calor
+
+Mostrar:
+
+⚠️ Evento inesperado
+
+"Em determinado momento você resolveu dormir.
+
+Os registros históricos indicam que eu fui deixada praticamente ao relento da madrugada.
+
+A acusada nega todas as acusações."
+
+Mostrar botão:
+
+📢 Ouvir Defesa
+
+Ao clicar:
+
+"Eu estava cansadinha."
+
+Manter tom divertido.
+
+---
+
+REGRAS
+
+- O capítulo só pode ser concluído quando a barra atingir 100%.
+- A usuária pode clicar nos itens em qualquer ordem.
+- O item 😴 Dormir pode ser clicado apenas uma vez.
+- Os outros itens podem ser usados somente uma vez.
+- Exibir visualmente o aumento ou diminuição da barra.
+
+---
+
+FINAL
+
+Quando a barra atingir 100%:
+
+Mostrar:
+
+🏆 Missão Concluída
+
+Paciente estabilizada.
+
+Texto:
+
+"Quando lembro daquela viagem, não lembro da doença.
+
+Não lembro do desconforto.
+
+Nem do frio.
+
+Eu lembro de você acordando para ver se eu estava respirando direito.
+
+Lembro dos abraços.
+
+Dos carinhos.
+
+Da preocupação.
+
+E da forma como você cuidou de mim quando eu mais precisava.
+
+Foi ali que eu percebi que amor também é isso.
+
+É cuidar de alguém mesmo quando ninguém está vendo."
+
+Mostrar:
+
+🏆 Conquista Desbloqueada
+
+❤️ Guardiã do Inverno
+
+Botão:
+
+❤️ Continuar a Aventura
+
+Ao clicar:
+
+- Concluir o capítulo.
+- Remover a fumaça da próxima região.
+- Desbloquear o último capítulo do mapa.
+- Mostrar animação:
+
+✨ Memória Registrada
+
+Visual:
+
+Misturar RPG, humor e emoção.
+Manter a identidade visual já existente do projeto.
+Fazer parecer uma pequena missão dentro da aventura principal.
