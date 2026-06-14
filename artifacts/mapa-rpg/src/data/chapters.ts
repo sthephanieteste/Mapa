@@ -205,11 +205,7 @@ export const CHAPTERS: Record<string, Chapter> = {
       {
         id: "s1",
         heading: "Onde nos conhecemos",
-        text: "Tem lugares que parecem comuns até o dia em que se tornam especiais para sempre. A UTFPR era só uma universidade. Até que você apareceu.",
-      },
-      {
-        id: "s2",
-        text: "Primeiras impressões, primeiras conversas, primeiros sorrisos. É curioso como a gente pode estar no mesmo espaço por dias e de repente — num instante — tudo muda.",
+        text: "O nosso 'nós' começou a se tornar real ali, entre os corredores e a correria. Eu chegava exausta, esgotada da rotina e do trabalho, mas bastava saber que eu ia te encontrar na UTF para tudo mudar. Era como um botão de 'reset': assim que te via, o cansaço simplesmente sumia.",
       },
     ],
     messages: [
@@ -217,7 +213,7 @@ export const CHAPTERS: Record<string, Chapter> = {
         id: "m1",
         author: "Você",
         avatar: "🎓",
-        text: "Se eu pudesse voltar a qualquer momento, escolheria aquele corredor. Aquele exato segundo.",
+        text: "Olhando para toda a nossa trajetória até aqui, eu tenho certeza de uma coisa: não há nada neste mundo que me faça jogar fora o que estamos construindo. Eu não mudaria um detalhe sequer. No fundo, eu sempre soube... desde o primeiro passo, sempre foi você.",
         date: "13 de junho de 2026",
       },
     ],
