@@ -229,22 +229,18 @@ export const CHAPTERS: Record<string, Chapter> = {
     color: "#e53935",
     accentColor: "#ffebee",
     photos: [
-      { id: "p1", src: "/assets/fotos/della-pazetti/foto1.jpg", caption: "Nossa mesa favorita" },
-      { id: "p2", src: "/assets/fotos/della-pazetti/foto2.jpg", caption: "A melhor pizza" },
-      { id: "p3", src: "/assets/fotos/della-pazetti/foto3.jpg", caption: "Uma noite especial" },
+      { id: "p1", src: "/fotos/della-pazetti/foto1.jpg", caption: "Nós ❤️" },
+      { id: "p2", src: "/fotos/della-pazetti/foto2.jpg", caption: "Nós ❤️" },
+      { id: "p3", src: "/fotos/della-pazetti/foto3.jpg", caption: "Nós ❤️" },
     ],
     videos: [
-      { id: "v1", title: "Aquela noite no Della", src: "", thumbnail: "" },
+      { id: "v1", title: "Nossa memória 🎬", src: "/fotos/della-pazetti/video1.mp4", thumbnail: "" },
     ],
     story: [
       {
         id: "s1",
         heading: "Mais que um restaurante",
-        text: "O Della Pazetti virou nosso lugar. A mesa que a gente sempre pedia, o garçom que já nos conhecia, a pizza que a gente dividia mesmo sem precisar dividir.",
-      },
-      {
-        id: "s2",
-        text: "Tem conversas que não acabam. A gente ficava horas lá, até o lugar fechar, sem perceber o tempo passar. Porque quando a companhia é certa, o tempo não existe.",
+        text: "Eu estava com muita saudade de casa e ficava pensando se ia ou se ficava. Eu sabia que ir não era certo, mas ficar estava difícil. E quando falei para vocês no restaurante que talvez voltaria, você chorou demais para quem era só minha amiga! Kkkkkkkkkk.\n\nSeu primo mandou uma mensagem, que até o momento eu achei que o seu celular estava caindo, de tão rápido que você puxou, que eu nem entendi o que era. Agora eu sei! Ahahahaha.\n\nSe eu tivesse ido, eu teria perdido toda essa jornada incrível que estamos tendo. Te escolheria todas as vezes, todos os dias.",
       },
     ],
     messages: [
@@ -252,7 +248,7 @@ export const CHAPTERS: Record<string, Chapter> = {
         id: "m1",
         author: "Você",
         avatar: "🍕",
-        text: "Sinto falta das nossas pizzas. E das nossas conversas que nunca terminavam.",
+        text: "Acho que foi ali que o falicido faleceu mesmo kkkkkkkkkkkk",
         date: "13 de junho de 2026",
       },
     ],

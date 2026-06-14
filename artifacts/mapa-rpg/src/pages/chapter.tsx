@@ -314,12 +314,17 @@ export default function ChapterPage() {
                     {block.heading}
                   </h3>
                 )}
-                <p
-                  className="text-sm leading-relaxed"
-                  style={{ color: "rgba(225,195,140,0.88)", fontFamily: "Georgia, serif" }}
-                >
-                  {block.text}
-                </p>
+                <div className="space-y-3">
+                  {block.text.split("\n\n").map((para, i) => (
+                    <p
+                      key={i}
+                      className="text-sm leading-relaxed"
+                      style={{ color: "rgba(225,195,140,0.88)", fontFamily: "Georgia, serif" }}
+                    >
+                      {para}
+                    </p>
+                  ))}
+                </div>
               </div>
             ))}
           </div>
