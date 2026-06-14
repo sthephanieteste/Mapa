@@ -10,6 +10,7 @@ import AvatarQuizUtfpr from "@/components/AvatarQuizUtfpr";
 import BookExperienceDella from "@/components/BookExperienceDella";
 import MissionCristo from "@/components/MissionCristo";
 import MissionGuarapuava from "@/components/MissionGuarapuava";
+import FutureChapter from "@/components/FutureChapter";
 
 function PlaceholderImage({ caption }: { caption: string }) {
   return (
@@ -424,6 +425,16 @@ export default function ChapterPage() {
           />
         ) : chapter.id === "utfpr-guarapuava" ? (
           <MissionGuarapuava
+            chapterId={chapter.id}
+            chapterColor={chapter.color}
+            isCompleted={isCompleted(chapter.id)}
+            completeChapter={completeChapter}
+            nextChapterId={nextChapter(chapter.id)}
+            onNavigateNext={(id) => navigate(`/chapter/${id}`)}
+            onNavigateMap={() => navigate("/map")}
+          />
+        ) : chapter.id === "o-futuro" ? (
+          <FutureChapter
             chapterId={chapter.id}
             chapterColor={chapter.color}
             isCompleted={isCompleted(chapter.id)}
