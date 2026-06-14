@@ -1,0 +1,281 @@
+Capítulo 5 — Cristo de Cornélio
+
+IMPORTANTE:
+
+Não alterar o mapa.
+Não alterar a música.
+Não alterar os outros capítulos.
+
+Este capítulo deve funcionar como uma mini aventura narrativa chamada:
+
+❤️ Missão: O Pedido
+
+---
+
+Ao entrar no capítulo:
+
+Mostrar:
+
+📍 Cristo de Cornélio
+
+Missão Especial Detectada
+
+Objetivo:
+Realizar um pedido de namoro.
+
+Botão:
+
+✨ Iniciar Missão
+
+---
+
+ETAPA 1 — A Guerra da Aliança
+
+Mostrar uma foto da aliança quebrada.
+
+Texto:
+
+"Tudo estava pronto.
+
+Ou pelo menos era o que eu pensava.
+
+A aliança chegou.
+
+Quebrada.
+
+Completamente destruída.
+
+Foi nesse momento que começou uma missão paralela que eu definitivamente não tinha planejado."
+
+Botão:
+
+⚔️ Continuar
+
+---
+
+Mostrar:
+
+⚔️ A Guerra da Aliança
+
+"Briguei com o carteiro.
+
+Briguei com a chefe do carteiro.
+
+Briguei com a atendente da loja.
+
+Briguei com o carteiro de novo.
+
+E terminei brigando até com a gerente.
+
+Expliquei calmamente que faria o pedido em 3 dias.
+
+Também perguntei, de forma extremamente educada, se eles preferiam que eu fosse até São Paulo buscar pessoalmente ou se eles dariam um jeito de fazer a aliança chegar.
+
+Acho que eles não gostaram muito de algumas pequenas ameaças.
+
+Mas funcionou.
+
+A previsão era muito maior.
+
+A nova aliança chegou em apenas dois dias."
+
+Ao final:
+
+💍 Aliança recuperada.
+🏆 Vitória da carioca.
+
+Botão:
+
+➡️ Próxima Etapa
+
+---
+
+ETAPA 2 — Recrutando as Aliadas
+
+Mostrar quatro personagens clicáveis.
+
+Objetivo:
+
+A usuária deve clicar em todas para continuar.
+
+---
+
+🚗 Isadora
+
+Ao clicar:
+
+"Responsável pelo transporte da operação.
+
+Durante o trajeto tivemos sérias dúvidas se chegaríamos ao Cristo ou ao além.
+
+Em determinado momento ela deixou bem claro que, se eu deixasse a aliança cair, ela arrastaria minha cara no asfalto.
+
+Felizmente a aliança sobreviveu.
+
+E eu também."
+
+Marcar Isadora como visitada.
+
+---
+
+📸 Miriam
+
+Ao clicar:
+
+"Responsável pelo suporte emocional.
+
+Ou pelo menos era o plano.
+
+Passou boa parte do tempo rindo.
+
+Parecia mais nervosa que eu.
+
+E quando chegou a hora das fotos...
+
+Vamos dizer que o talento dela estava mais na torcida do que na fotografia.
+
+PS:
+Tirou fotos ruins.
+
+Mas eu gosto delas mesmo assim. ❤️"
+
+Marcar Miriam como visitada.
+
+---
+
+💐 Vitória
+
+Ao clicar:
+
+"Responsável pelos itens lendários da missão.
+
+Funções:
+
+✅ Entregar o buquê
+✅ Entregar a aliança
+✅ Sobreviver à direção da Isadora
+
+Enquanto eu estava entrando em colapso emocional, ela manteve tudo sob controle.
+
+Foi braba."
+
+Marcar Vitória como visitada.
+
+---
+
+📱 Ana Lígia
+
+Ao clicar:
+
+"Membro remoto da operação.
+
+Não estava presente fisicamente.
+
+Mas esteve presente durante praticamente toda a missão.
+
+Me ajudou desde o início.
+
+Participou dos planos.
+
+Acompanhou os surtos.
+
+Apoiou as decisões.
+
+E, pelo ritmo das sugestões dela...
+
+Acho que ela queria que eu te pedisse em casamento antes mesmo do namoro.
+
+Ela foi minha parceira do início ao fim.
+
+E sinceramente?
+
+Ainda estou devendo essa para ela. ❤️"
+
+Marcar Ana Lígia como visitada.
+
+---
+
+Após clicar nas quatro:
+
+Mostrar:
+
+🎯 Equipe reunida
+
+A missão agora pode prosseguir.
+
+Botão:
+
+➡️ Continuar
+
+---
+
+ETAPA 3 — O Chefe Final
+
+Tela mais escura.
+
+Música reduzida levemente.
+
+Mostrar:
+
+Objetivo Atual:
+
+❤️ Fazer o Pedido
+
+Exibir barra:
+
+Nervosismo
+
+████████████████ 100%
+
+Texto:
+
+"Mãos tremendo.
+
+Coração acelerado.
+
+Nenhuma frase funcionando direito.
+
+O mais engraçado é que eu já sabia da resposta.
+
+Mesmo assim eu estava com medo.
+
+Porque quando algo é importante de verdade...
+
+A gente sempre fica com medo de perder."
+
+Botão:
+
+❤️ Fazer o Pedido
+
+---
+
+ETAPA FINAL
+
+Mostrar a foto principal do pedido.
+
+Texto:
+
+"Foi aqui que nossa história ganhou um novo capítulo."
+
+Depois:
+
+🏆 Missão Concluída
+
+Resultado:
+
+❤️ Ela disse sim.
+
+Botão:
+
+❤️ Continuar a Aventura
+
+Ao clicar:
+
+- Concluir o capítulo.
+- Desbloquear a próxima região.
+- Remover a fumaça da próxima área.
+- Mostrar animação:
+
+✨ Memória Registrada
+
+O capítulo deve parecer uma missão de RPG romântica, misturando humor, emoção e acontecimentos reais da história.
