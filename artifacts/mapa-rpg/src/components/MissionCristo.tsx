@@ -132,7 +132,10 @@ export default function MissionCristo({
   function handleComplete() {
     if (!isCompleted) completeChapter(chapterId);
     setShowMemoria(true);
-    setTimeout(() => setShowMemoria(false), 2400);
+    setTimeout(() => {
+      setShowMemoria(false);
+      if (nextChapterId) onNavigateNext(nextChapterId);
+    }, 2400);
   }
 
   const allVisited = ALIADAS.every((a) => visited.has(a.key));

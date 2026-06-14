@@ -96,9 +96,10 @@ export default function AvatarQuizUtfpr({
 
   function handleChar2Click() {
     if (locked) return;
-    setLocked(true);
+    // Wrong answer — show message but DON'T lock so she can still click the correct avatar
     setChar2Success(false);
     setChar2Msg("Eu nao sou nem louca, estaria morta só de pensar nisso 💀");
+    setTimeout(() => setChar2Msg(null), 2800);
   }
 
   return (

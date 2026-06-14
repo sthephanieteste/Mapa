@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const INITIAL_HEAT = 20;
+const INITIAL_HEAT = 40;
 const MAX_HEAT = 100;
 
 const ITEMS = [
@@ -16,15 +16,16 @@ Talvez não resolvesse tudo.
 Mas definitivamente ajudou a diminuir minhas chances de virar uma atração turística congelada de Guarapuava.`,
   },
   {
-    key: "abraco",
-    icon: "🤗",
-    name: "Abraço",
-    delta: +35,
-    text: `Entre todas as soluções daquela noite, essa foi a mais eficiente.
+    key: "dormir",
+    icon: "😴",
+    name: "Dormir",
+    delta: -20,
+    text: `Em determinado momento você resolveu dormir.
 
-Não sei se existe alguma explicação científica.
+Os registros históricos indicam que eu fui deixada praticamente ao relento da madrugada.
 
-Mas eu lembro que toda vez que você me abraçava eu me sentia um pouco melhor.`,
+A acusada nega todas as acusações.`,
+    isTrap: true,
   },
   {
     key: "carinho",
@@ -42,16 +43,15 @@ Talvez para você tenha sido apenas um gesto simples.
 Mas eu nunca esqueci.`,
   },
   {
-    key: "dormir",
-    icon: "😴",
-    name: "Dormir",
-    delta: -20,
-    text: `Em determinado momento você resolveu dormir.
+    key: "abraco",
+    icon: "🤗",
+    name: "Abraço",
+    delta: +35,
+    text: `Entre todas as soluções daquela noite, essa foi a mais eficiente.
 
-Os registros históricos indicam que eu fui deixada praticamente ao relento da madrugada.
+Não sei se existe alguma explicação científica.
 
-A acusada nega todas as acusações.`,
-    isTrap: true,
+Mas eu lembro que toda vez que você me abraçava eu me sentia um pouco melhor.`,
   },
 ];
 
@@ -322,15 +322,6 @@ export default function MissionGuarapuava({
                       }}>
                         {item.name}
                       </p>
-                      {!isUsed && (
-                        <p style={{
-                          fontFamily: "Georgia, serif", fontSize: "10px",
-                          color: item.delta > 0 ? "rgba(100,200,100,0.7)" : "rgba(220,80,80,0.7)",
-                          letterSpacing: "0.04em",
-                        }}>
-                          {item.delta > 0 ? `+${item.delta}` : item.delta} 🌡️
-                        </p>
-                      )}
                       {isUsed && (
                         <p style={{ fontFamily: "Georgia, serif", fontSize: "10px", color: "rgba(120,100,60,0.4)" }}>
                           Usado
@@ -397,15 +388,6 @@ export default function MissionGuarapuava({
                       <p style={{ fontFamily: "Georgia, serif", fontSize: "13px", color: "rgba(220,160,160,0.9)", fontStyle: "italic" }}>
                         "Eu estava cansadinha."
                       </p>
-                    </div>
-                  )}
-                  {!activeMsg.isTrap && (
-                    <div style={{
-                      marginTop: "8px", display: "flex", alignItems: "center", gap: "8px",
-                    }}>
-                      <span style={{ fontSize: "16px", color: "#80e080", filter: "drop-shadow(0 0 6px #60c060)" }}>
-                        +{activeMsg.delta} 🌡️
-                      </span>
                     </div>
                   )}
                 </div>
