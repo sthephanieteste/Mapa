@@ -1,0 +1,135 @@
+Capítulo 4 - Della Pazetti
+
+Substituir completamente o sistema de perguntas deste capítulo.
+
+Objetivo:
+
+Transformar o capítulo em um mini livro interativo.
+
+Funcionamento:
+
+- Ao entrar no capítulo, não mostrar fotos nem conteúdo imediatamente.
+- Exibir apenas um livro fechado sobre uma mesa.
+- Mostrar a mensagem:
+
+"📖 Um diário foi encontrado."
+
+- Ao clicar no livro, abrir uma experiência de leitura.
+
+Livro:
+
+O livro possui 3 páginas.
+
+Navegação:
+
+- Botão Próxima Página
+- Botão Página Anterior
+- Animação de virar página
+- Visual de diário/livro romântico
+
+Página 1:
+
+"Eu não sei como era a sua vida antes de eu chegar nela.
+
+Mas eu sei muito bem como era a minha.
+
+Eu nunca tinha sentido exatamente o que sinto hoje. É difícil explicar. É uma mistura de paixão, empolgação, saudade, felicidade e, às vezes, até um pouco de medo.
+
+Medo de perder algo que se tornou tão importante para mim.
+
+Antes de você, eu achava que algumas coisas só existiam em filmes, músicas ou nas histórias que as pessoas contam.
+
+Mas aí você apareceu.
+
+E, de repente, tudo aquilo começou a fazer sentido.
+
+Talvez o amor seja exatamente isso.
+
+Encontrar alguém que faz o mundo parecer um lugar diferente sem mudar de lugar nenhum."
+
+Página 2:
+
+"Quando olho para tudo que vivemos até aqui, percebo que as melhores memórias nunca foram os grandes acontecimentos.
+
+Foram os momentos simples.
+
+As conversas sem assunto.
+
+As risadas inesperadas.
+
+Os encontros que pareciam durar pouco demais.
+
+Os dias comuns que acabaram se tornando especiais simplesmente porque você estava neles.
+
+Você entrou na minha vida de uma forma tão natural que hoje é difícil imaginar como ela era antes.
+
+E talvez essa seja uma das coisas mais bonitas de todas.
+
+Porque algumas pessoas passam pela nossa vida.
+
+Mas outras passam a fazer parte dela."
+
+Página 3:
+
+"Dizem que a felicidade precisa ser conquistada.
+
+Mas eu, como uma boa carioca, encontrei um método alternativo...
+
+Eu roubei.
+
+E foi o maior roubo da minha vida.
+
+Roubei seu tempo.
+
+Roubei seus abraços.
+
+Roubei seus beijos.
+
+Roubei um espaço no seu coração.
+
+E sinceramente?
+
+Não me arrependo nem um pouco.
+
+Por isso, deixo aqui meus sentimentos ao antigo dono desse coração:
+
+⚰️ Descanse em paz, falecido.
+
+Você foi forte.
+
+Você resistiu.
+
+Você lutou bravamente.
+
+Mas acabou sendo derrotado por uma carioca determinada.
+
+Sempre será lembrado.
+
+Com carinho, respeito e absolutamente nenhuma intenção de devolver o que foi roubado. ❤️"
+
+Desbloqueio:
+
+- O capítulo só será concluído quando a última página for alcançada.
+- Ao chegar na última página, exibir:
+
+"❤️ Você concluiu este capítulo."
+
+Botão:
+
+"Continuar a aventura"
+
+Ao clicar:
+
+- Marcar capítulo como concluído.
+- Desbloquear a próxima região.
+- Remover a fumaça do próximo local.
+- Mostrar animação:
+
+"✨ Memória registrada"
+
+Importante:
+
+Não alterar o mapa.
+Não alterar os outros capítulos.
+Não alterar a música.
+Criar apenas esta experiência especial para o Capítulo 4.

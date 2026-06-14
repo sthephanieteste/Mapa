@@ -7,6 +7,7 @@ import { getQuiz } from "@/data/quizStorage";
 import AvatarQuiz from "@/components/AvatarQuiz";
 import AvatarQuizViagem from "@/components/AvatarQuizViagem";
 import AvatarQuizUtfpr from "@/components/AvatarQuizUtfpr";
+import BookExperienceDella from "@/components/BookExperienceDella";
 
 function PlaceholderImage({ caption }: { caption: string }) {
   return (
@@ -391,6 +392,16 @@ export default function ChapterPage() {
           />
         ) : chapter.id === "utfpr" ? (
           <AvatarQuizUtfpr
+            chapterId={chapter.id}
+            chapterColor={chapter.color}
+            isCompleted={isCompleted(chapter.id)}
+            completeChapter={completeChapter}
+            nextChapterId={nextChapter(chapter.id)}
+            onNavigateNext={(id) => navigate(`/chapter/${id}`)}
+            onNavigateMap={() => navigate("/map")}
+          />
+        ) : chapter.id === "della-pazetti" ? (
+          <BookExperienceDella
             chapterId={chapter.id}
             chapterColor={chapter.color}
             isCompleted={isCompleted(chapter.id)}
