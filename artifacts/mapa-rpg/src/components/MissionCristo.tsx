@@ -227,13 +227,17 @@ export default function MissionCristo({
             <div style={{
               borderRadius: "12px", overflow: "hidden", marginBottom: "20px",
               border: `1px solid ${chapterColor}25`,
-              background: "rgba(10,6,2,0.8)",
-              padding: "20px", textAlign: "center",
             }}>
-              <div style={{ fontSize: "48px", marginBottom: "8px", filter: "drop-shadow(0 0 12px rgba(200,80,80,0.4))" }}>💍</div>
-              <p style={{ fontFamily: "Georgia, serif", fontSize: "11px", color: "rgba(200,100,100,0.6)", letterSpacing: "0.08em" }}>
-                [Foto da aliança quebrada]
-              </p>
+              <img
+                src="/alianca-quebrada.jpg"
+                alt="A aliança quebrada"
+                style={{
+                  width: "100%",
+                  display: "block",
+                  objectFit: "cover",
+                  maxHeight: "320px",
+                }}
+              />
             </div>
 
             <NarrativeText color={chapterColor} paragraphs={[
