@@ -158,22 +158,18 @@ export const CHAPTERS: Record<string, Chapter> = {
     color: "#ff9800",
     accentColor: "#ffe0b2",
     photos: [
-      { id: "p1", src: "/assets/fotos/a-viagem/foto1.jpg", caption: "A partida" },
-      { id: "p2", src: "/assets/fotos/a-viagem/foto2.jpg", caption: "Pelo caminho" },
-      { id: "p3", src: "/assets/fotos/a-viagem/foto3.jpg", caption: "As montanhas que cruzei" },
+      { id: "p1", src: "/fotos/a-viagem/foto1.jpg", caption: "Nós ❤️" },
+      { id: "p2", src: "/fotos/a-viagem/foto2.jpg", caption: "Nós ❤️" },
+      { id: "p3", src: "/fotos/a-viagem/foto3.jpg", caption: "Nós ❤️" },
     ],
     videos: [
-      { id: "v1", title: "A chegada ao Paraná", src: "", thumbnail: "" },
+      { id: "v1", title: "Nossa memória 🎬", src: "/fotos/a-viagem/video1.mp4", thumbnail: "" },
     ],
     story: [
       {
         id: "s1",
-        heading: "A estrada como metáfora",
-        text: "Mudar de cidade é assustador. Mas tem uma magia nisso — o desconhecido à frente, o familiar ficando para trás, e você ali no meio, se tornando alguém novo a cada quilômetro.",
-      },
-      {
-        id: "s2",
-        text: "Eu não sabia o que me esperava no Paraná. Não sabia que um campus de universidade podia ser o cenário de uma história de amor. Não sabia que você existia. E então, de repente, você existiu.",
+        heading: "A arte de dar vácuo (e se apaixonar mesmo assim)",
+        text: "Eu juro que tentei manter a pose! Entre um vácuo e outro — porque eu sou difícil, né, não tem jeito kkkkk — eu tentava esconder o que sentia. Mas como negar o inevitável? A gente se aproximava cada vez mais e o meu olhar já não me obedecia. Todo mundo via, todo mundo sabia, e eu... bom, eu já estava perdidamente apaixonada por você",
       },
     ],
     messages: [
