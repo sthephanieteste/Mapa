@@ -326,15 +326,6 @@ export default function AvatarQuizViagem({
 
             </div>
 
-            {/* Hint after first char1 click */}
-            {char1Clicks === 1 && (
-              <p style={{
-                fontFamily: "Georgia, serif", fontSize: "12px",
-                color: `${chapterColor}80`, animation: "fadeIn 0.4s ease", textAlign: "center",
-              }}>
-                💭 Tem certeza? Clique de novo para confirmar...
-              </p>
-            )}
           </div>
         )}
       </div>
