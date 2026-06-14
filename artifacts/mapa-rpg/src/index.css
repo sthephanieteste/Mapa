@@ -573,3 +573,29 @@
   40%  { opacity: 0.7; transform: scale(1.1);            filter: blur(4px);  }
   100% { opacity: 0;   transform: scale(1.6);            filter: blur(24px); }
 }
+
+/* ── Chapter reset smoke effect ────────────────── */
+@keyframes smokeFadeIn {
+  0%   { opacity: 0; }
+  30%  { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes smokeFadeOut {
+  0%   { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes smokePuff1 {
+  0%   { transform: translate(0px, 0px)    scale(1)    rotate(0deg);   filter: blur(30px); }
+  50%  { transform: translate(-40px,-60px) scale(1.4)  rotate(15deg);  filter: blur(50px); }
+  100% { transform: translate(20px,-120px) scale(1.8)  rotate(-10deg); filter: blur(80px); }
+}
+@keyframes smokePuff2 {
+  0%   { transform: translate(0px,   0px)   scale(1)   rotate(0deg);   filter: blur(40px); }
+  50%  { transform: translate(60px, -40px)  scale(1.5) rotate(-20deg); filter: blur(60px); }
+  100% { transform: translate(-30px,-100px) scale(2)   rotate(25deg);  filter: blur(90px); }
+}
+@keyframes smokePuff3 {
+  0%   { transform: translate(0px, 0px)   scale(1)    rotate(0deg);   filter: blur(50px); }
+  50%  { transform: translate(20px,-80px) scale(1.3)  rotate(10deg);  filter: blur(70px); }
+  100% { transform: translate(-50px,-80px) scale(1.9) rotate(-30deg); filter: blur(100px); }
+}

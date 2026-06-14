@@ -80,6 +80,8 @@ export default function ChapterPage() {
   const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
   const { isCompleted, completeChapter, nextChapter, resetChapter } = useProgress();
   const [confirmReset, setConfirmReset] = useState(false);
+  const [resetKey, setResetKey] = useState(0);
+  const [showSmoke, setShowSmoke] = useState<"in" | "out" | null>(null);
 
   const chapter = CHAPTERS[params.id ?? ""];
 
@@ -372,6 +374,7 @@ export default function ChapterPage() {
         </section>
 
         {/* ── QUIZ ── */}
+        <div key={resetKey}>
         {chapter.id === "rio-de-janeiro" ? (
           <AvatarQuiz
             chapterId={chapter.id}
@@ -453,6 +456,7 @@ export default function ChapterPage() {
             onNavigateMap={() => navigate("/map")}
           />
         )}
+        </div>
 
         {/* ── NAV BOTTOM ── */}
         <div className="flex flex-col items-center gap-4 pt-2 pb-8">
@@ -501,9 +505,19 @@ export default function ChapterPage() {
                   <div className="flex gap-3">
                     <button
                       onClick={() => {
-                        resetChapter(chapter.id);
                         setConfirmReset(false);
-                        window.scrollTo({ top: 0, behavior: "smooth" });
+                        setShowSmoke("in");
+                        setTimeout(() => {
+                          resetChapter(chapter.id);
+                          setResetKey((k) => k + 1);
+                          window.scrollTo({ top: 0, behavior: "instant" });
+                        }, 700);
+                        setTimeout(() => {
+                          setShowSmoke("out");
+                        }, 900);
+                        setTimeout(() => {
+                          setShowSmoke(null);
+                        }, 1500);
                       }}
                       className="px-4 py-1.5 rounded-full text-xs transition-all hover:scale-105"
                       style={{
@@ -534,6 +548,60 @@ export default function ChapterPage() {
           )}
         </div>
       </div>
+
+      {/* ── SMOKE RESET OVERLAY ── */}
+      {showSmoke && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 100,
+            pointerEvents: "none",
+            overflow: "hidden",
+            animation: showSmoke === "in"
+              ? "smokeFadeIn 0.7s ease forwards"
+              : "smokeFadeOut 0.6s ease forwards",
+          }}
+        >
+          {/* dark base */}
+          <div style={{ position: "absolute", inset: 0, background: "rgba(4,2,1,0.85)" }} />
+          {/* smoke puff 1 */}
+          <div style={{
+            position: "absolute", bottom: "-10%", left: "20%",
+            width: 400, height: 400, borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(80,55,20,0.7) 0%, rgba(40,25,8,0.4) 50%, transparent 75%)",
+            animation: `smokePuff1 1.5s ease-out forwards`,
+          }} />
+          {/* smoke puff 2 */}
+          <div style={{
+            position: "absolute", bottom: "-5%", left: "45%",
+            width: 500, height: 500, borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(60,40,15,0.65) 0%, rgba(30,18,6,0.35) 50%, transparent 75%)",
+            animation: `smokePuff2 1.4s ease-out 0.1s forwards`,
+          }} />
+          {/* smoke puff 3 */}
+          <div style={{
+            position: "absolute", bottom: "-15%", right: "15%",
+            width: 450, height: 450, borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(70,48,18,0.6) 0%, rgba(35,22,7,0.3) 50%, transparent 75%)",
+            animation: `smokePuff3 1.6s ease-out 0.05s forwards`,
+          }} />
+          {/* center text */}
+          <div style={{
+            position: "absolute", inset: 0,
+            display: "flex", alignItems: "center", justifyContent: "center",
+            animation: "fadeIn 0.4s ease 0.2s both",
+          }}>
+            <p style={{
+              fontFamily: "Georgia, serif", fontSize: "18px",
+              color: "rgba(220,170,80,0.85)", letterSpacing: "0.15em",
+              textShadow: "0 0 30px rgba(200,130,30,0.5)",
+            }}>
+              ✦ Recomeçando... ✦
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* ── LIGHTBOX ── */}
       {lightboxIdx !== null && (
