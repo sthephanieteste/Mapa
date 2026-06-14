@@ -7,6 +7,7 @@ import MapPage from "@/pages/map";
 import ChapterPage from "@/pages/chapter";
 import AdminPage from "@/pages/admin";
 import MusicPlayer from "@/components/MusicPlayer";
+import SettingsSidebar from "@/components/SettingsSidebar";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ function App() {
           <Router />
         </WouterRouter>
         <MusicPlayer />
+        <SettingsSidebar />
         <Toaster />
       </TooltipProvider>
     </QueryClientProvider>

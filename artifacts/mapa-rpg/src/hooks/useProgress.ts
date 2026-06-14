@@ -1,7 +1,7 @@
 import { useEffect, useReducer, useCallback } from "react";
 import { CHAPTER_ORDER } from "@/data/progression";
 
-const STORAGE_KEY = "nossa-historia-progress";
+export const STORAGE_KEY = "nossa-historia-progress";
 
 interface ProgressState {
   unlockedChapters: string[];
@@ -68,16 +68,44 @@ export function useProgress() {
     setState({ unlockedChapters, completedChapters });
   }, []);
 
+  // Reset a single chapter: keep it unlocked but remove it (and all after it)
+  // from completed; lock all chapters that come after it.
+  const resetChapter = useCallback((chapterId: string) => {
+    const idx = CHAPTER_ORDER.indexOf(chapterId);
+    if (idx < 0) return;
+
+    const completedChapters = _state.completedChapters.filter(
+      (id) => CHAPTER_ORDER.indexOf(id) < idx,
+    );
+    // Keep chapters up to AND including chapterId unlocked; lock everything after
+    const unlockedChapters = _state.unlockedChapters.filter(
+      (id) => CHAPTER_ORDER.indexOf(id) <= idx,
+    );
+
+    setState({ unlockedChapters, completedChapters });
+  }, []);
+
+  // Wipe everything and reload to the initial state
+  const resetAll = useCallback(() => {
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem("nossa-historia-playlist");
+    } catch {}
+    _state = { unlockedChapters: [CHAPTER_ORDER[0]], completedChapters: [] };
+    _listeners.forEach((l) => l());
+    window.location.href = "/";
+  }, []);
+
   const isUnlocked = useCallback(
     (chapterId: string) => _state.unlockedChapters.includes(chapterId),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [_state]
+    [_state],
   );
 
   const isCompleted = useCallback(
     (chapterId: string) => _state.completedChapters.includes(chapterId),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [_state]
+    [_state],
   );
 
   const nextChapter = useCallback((afterId: string): string | null => {
@@ -89,8 +117,12 @@ export function useProgress() {
     isUnlocked,
     isCompleted,
     completeChapter,
+    resetChapter,
+    resetAll,
     completedCount: _state.completedChapters.length,
     totalCount: CHAPTER_ORDER.length,
     nextChapter,
+    unlockedChapters: _state.unlockedChapters,
+    completedChapters: _state.completedChapters,
   };
 }
