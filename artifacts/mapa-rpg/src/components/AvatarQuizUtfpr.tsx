@@ -88,10 +88,12 @@ export default function AvatarQuizUtfpr({
   function handleChar1Click() {
     if (locked) return;
     setLocked(true);
-    setSolved(true);
     setChar2Success(true);
-    setChar2Msg("Vou nem falar nada pro bglh nao ficar doido pprt 😶");
-    completeChapter(chapterId);
+    setChar2Msg("eu não vou falar nada pprt 😶");
+    setTimeout(() => {
+      setSolved(true);
+      completeChapter(chapterId);
+    }, 2000);
   }
 
   function handleChar2Click() {

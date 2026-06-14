@@ -275,59 +275,67 @@ export default function ChapterPage() {
         {hasVideos && (
           <section>
             <SectionTitle icon="🎬" label="Vídeos" color={chapter.color} />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-              {chapter.videos.map((video) =>
-                video.src ? (
-                  <div key={video.id} className="rounded-lg overflow-hidden" style={{ border: `1px solid ${chapter.color}20` }}>
-                    <video controls className="w-full aspect-video" src={video.src} />
-                    <p className="text-xs px-3 py-2" style={{ color: "rgba(200,160,80,0.6)", fontFamily: "Georgia, serif" }}>
-                      {video.title}
-                    </p>
-                  </div>
-                ) : (
-                  <PlaceholderVideo key={video.id} title={video.title} />
-                )
-              )}
-            </div>
+            {!isCompleted(chapter.id) ? (
+              <LockedContent color={chapter.color} />
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                {chapter.videos.map((video) =>
+                  video.src ? (
+                    <div key={video.id} className="rounded-lg overflow-hidden" style={{ border: `1px solid ${chapter.color}20` }}>
+                      <video controls className="w-full aspect-video" src={video.src} />
+                      <p className="text-xs px-3 py-2" style={{ color: "rgba(200,160,80,0.6)", fontFamily: "Georgia, serif" }}>
+                        {video.title}
+                      </p>
+                    </div>
+                  ) : (
+                    <PlaceholderVideo key={video.id} title={video.title} />
+                  )
+                )}
+              </div>
+            )}
           </section>
         )}
 
         {/* ── HISTÓRIA ── */}
         <section>
           <SectionTitle icon="📖" label="A História" color={chapter.color} />
-          <div className="mt-4 space-y-6">
-            {chapter.story.map((block) => (
-              <div
-                key={block.id}
-                className="rounded-xl p-6"
-                style={{
-                  background: `linear-gradient(135deg, rgba(20,13,4,0.8) 0%, rgba(30,20,6,0.8) 100%)`,
-                  border: `1px solid ${chapter.color}20`,
-                  borderLeft: `3px solid ${chapter.color}60`,
-                }}
-              >
-                {block.heading && (
-                  <h3
-                    className="text-base font-bold mb-3"
-                    style={{ color: chapter.color, fontFamily: "Georgia, serif" }}
-                  >
-                    {block.heading}
-                  </h3>
-                )}
-                <div className="space-y-3">
-                  {block.text.split("\n\n").map((para, i) => (
-                    <p
-                      key={i}
-                      className="text-sm leading-relaxed"
-                      style={{ color: "rgba(225,195,140,0.88)", fontFamily: "Georgia, serif" }}
+          {!isCompleted(chapter.id) ? (
+            <LockedContent color={chapter.color} />
+          ) : (
+            <div className="mt-4 space-y-6">
+              {chapter.story.map((block) => (
+                <div
+                  key={block.id}
+                  className="rounded-xl p-6"
+                  style={{
+                    background: `linear-gradient(135deg, rgba(20,13,4,0.8) 0%, rgba(30,20,6,0.8) 100%)`,
+                    border: `1px solid ${chapter.color}20`,
+                    borderLeft: `3px solid ${chapter.color}60`,
+                  }}
+                >
+                  {block.heading && (
+                    <h3
+                      className="text-base font-bold mb-3"
+                      style={{ color: chapter.color, fontFamily: "Georgia, serif" }}
                     >
-                      {para}
-                    </p>
-                  ))}
+                      {block.heading}
+                    </h3>
+                  )}
+                  <div className="space-y-3">
+                    {block.text.split("\n\n").map((para, i) => (
+                      <p
+                        key={i}
+                        className="text-sm leading-relaxed"
+                        style={{ color: "rgba(225,195,140,0.88)", fontFamily: "Georgia, serif" }}
+                      >
+                        {para}
+                      </p>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </section>
 
         {/* ── MENSAGENS ── */}
