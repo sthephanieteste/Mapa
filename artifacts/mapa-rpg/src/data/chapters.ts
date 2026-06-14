@@ -193,13 +193,13 @@ export const CHAPTERS: Record<string, Chapter> = {
     color: "#7c3aed",
     accentColor: "#ede9fe",
     photos: [
-      { id: "p1", src: "/assets/fotos/utfpr/foto1.jpg", caption: "O primeiro encontro ✨" },
-      { id: "p2", src: "/assets/fotos/utfpr/foto2.jpg", caption: "Nos corredores da UTFPR" },
-      { id: "p3", src: "/assets/fotos/utfpr/foto3.jpg", caption: "Uma tarde inesquecível" },
-      { id: "p4", src: "/assets/fotos/utfpr/foto4.jpg", caption: "Mais uma memória" },
+      { id: "p1", src: "/fotos/utfpr/foto1.jpg", caption: "Nós ❤️" },
+      { id: "p2", src: "/fotos/utfpr/foto2.jpg", caption: "Cornélio Procópio 🌆" },
+      { id: "p3", src: "/fotos/utfpr/foto3.jpg", caption: "Nós ❤️" },
+      { id: "p4", src: "/fotos/utfpr/foto4.jpg", caption: "Nós ❤️" },
     ],
     videos: [
-      { id: "v1", title: "Um dia no campus", src: "", thumbnail: "" },
+      { id: "v1", title: "Nossa memória 🎬", src: "/fotos/utfpr/video1.mp4", thumbnail: "" },
     ],
     story: [
       {
