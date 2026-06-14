@@ -78,7 +78,8 @@ export default function ChapterPage() {
   const params = useParams<{ id: string }>();
   const [, navigate] = useLocation();
   const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
-  const { isCompleted, completeChapter, nextChapter } = useProgress();
+  const { isCompleted, completeChapter, nextChapter, resetChapter } = useProgress();
+  const [confirmReset, setConfirmReset] = useState(false);
 
   const chapter = CHAPTERS[params.id ?? ""];
 
@@ -454,7 +455,7 @@ export default function ChapterPage() {
         )}
 
         {/* ── NAV BOTTOM ── */}
-        <div className="flex justify-center pt-2 pb-8">
+        <div className="flex flex-col items-center gap-4 pt-2 pb-8">
           <button
             onClick={() => navigate("/map")}
             className="flex items-center gap-2 px-8 py-3 rounded-full text-sm font-medium transition-all hover:scale-105"
@@ -468,6 +469,69 @@ export default function ChapterPage() {
           >
             ← Voltar ao Mapa
           </button>
+
+          {/* ── RESET CHAPTER BUTTON ── */}
+          {isCompleted(chapter.id) && (
+            <div className="flex flex-col items-center gap-2">
+              {!confirmReset ? (
+                <button
+                  onClick={() => setConfirmReset(true)}
+                  className="flex items-center gap-2 px-5 py-2 rounded-full text-xs transition-all hover:opacity-80"
+                  style={{
+                    background: "rgba(15,8,2,0.7)",
+                    border: "1px solid rgba(180,100,40,0.25)",
+                    color: "rgba(200,140,60,0.55)",
+                    fontFamily: "Georgia, serif",
+                  }}
+                >
+                  ↺ Reiniciar Capítulo
+                </button>
+              ) : (
+                <div
+                  className="flex flex-col items-center gap-2 px-5 py-3 rounded-xl"
+                  style={{
+                    background: "rgba(18,8,2,0.9)",
+                    border: "1px solid rgba(220,80,40,0.35)",
+                    animation: "fadeIn 0.2s ease",
+                  }}
+                >
+                  <p style={{ fontFamily: "Georgia, serif", fontSize: "12px", color: "rgba(220,170,100,0.8)" }}>
+                    Reiniciar e interagir novamente?
+                  </p>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => {
+                        resetChapter(chapter.id);
+                        setConfirmReset(false);
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                      }}
+                      className="px-4 py-1.5 rounded-full text-xs transition-all hover:scale-105"
+                      style={{
+                        background: "rgba(200,70,30,0.25)",
+                        border: "1px solid rgba(220,80,40,0.5)",
+                        color: "rgba(240,160,100,0.9)",
+                        fontFamily: "Georgia, serif",
+                      }}
+                    >
+                      ↺ Sim, reiniciar
+                    </button>
+                    <button
+                      onClick={() => setConfirmReset(false)}
+                      className="px-4 py-1.5 rounded-full text-xs transition-all hover:scale-105"
+                      style={{
+                        background: "rgba(15,10,3,0.8)",
+                        border: "1px solid rgba(160,120,50,0.25)",
+                        color: "rgba(180,140,70,0.6)",
+                        fontFamily: "Georgia, serif",
+                      }}
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
