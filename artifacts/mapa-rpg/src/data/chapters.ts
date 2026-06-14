@@ -126,23 +126,15 @@ export const CHAPTERS: Record<string, Chapter> = {
     color: "#2196f3",
     accentColor: "#bbdefb",
     photos: [
-      { id: "p1", src: "/assets/fotos/rio-de-janeiro/foto1.jpg", caption: "Vista da Baía de Guanabara" },
-      { id: "p2", src: "/assets/fotos/rio-de-janeiro/foto2.jpg", caption: "Minha cidade" },
-      { id: "p3", src: "/assets/fotos/rio-de-janeiro/foto3.jpg", caption: "O Cristo nos olha de cima" },
-      { id: "p4", src: "/assets/fotos/rio-de-janeiro/foto4.jpg", caption: "A praia que sinto falta" },
+      { id: "p1", src: "/fotos/rio-de-janeiro/foto1.jpg", caption: "Nós ❤️" },
+      { id: "p2", src: "/fotos/rio-de-janeiro/foto2.jpg", caption: "Nós ❤️" },
     ],
-    videos: [
-      { id: "v1", title: "Um dia no Rio", src: "", thumbnail: "" },
-    ],
+    videos: [],
     story: [
       {
         id: "s1",
         heading: "Onde tudo começou",
-        text: "Nasci e cresci com o barulho do mar como trilha sonora. O Rio de Janeiro me ensinou que a vida pode ser intensa, colorida e cheia de contrastes — exatamente como a nossa história.",
-      },
-      {
-        id: "s2",
-        text: "Antes de te conhecer, eu não sabia que uma cidade inteira poderia caber em um só capítulo. Mas foi daqui que parti, com uma mochila nas costas e algo me dizendo que o melhor estava por vir.",
+        text: "Eu nunca pensei que deixaria tudo para trás. Sair do meu calor, da minha gente, da minha zona de conforto, parecia um erro. Mudar para um lugar onde o frio congela até os pensamentos... quem diria? Eu não sabia o que me esperava, tinha medo do desconhecido. Mas, olhando para trás hoje, vejo que foi a melhor escolha que já fiz. Porque foi exatamente naquele frio que o nosso destino se cruzou, e foi ali que a nossa história começou a ser escrita.",
       },
     ],
     messages: [

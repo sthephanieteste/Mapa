@@ -269,9 +269,9 @@ export default function ChapterPage() {
         </section>
 
         {/* ── VÍDEOS ── */}
-        <section>
-          <SectionTitle icon="🎬" label="Vídeos" color={chapter.color} />
-          {hasVideos ? (
+        {hasVideos && (
+          <section>
+            <SectionTitle icon="🎬" label="Vídeos" color={chapter.color} />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
               {chapter.videos.map((video) =>
                 video.src ? (
@@ -286,10 +286,8 @@ export default function ChapterPage() {
                 )
               )}
             </div>
-          ) : (
-            <EmptyState icon="🎬" text="Os vídeos deste capítulo ainda serão adicionados." color={chapter.color} />
-          )}
-        </section>
+          </section>
+        )}
 
         {/* ── HISTÓRIA ── */}
         <section>
