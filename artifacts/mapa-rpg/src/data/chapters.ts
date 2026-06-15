@@ -296,26 +296,21 @@ export const CHAPTERS: Record<string, Chapter> = {
     title: "UTFPR Guarapuava",
     subtitle: "Capítulo VI — Uma Jornada Além",
     description:
-      "A UTFPR Guarapuava representa novos horizontes. Uma jornada além do campus principal — novos desafios, novas histórias, mas a mesma parceria de sempre.",
+      "Foi longe de casa que eu me senti mais em casa do que nunca.",
     icon: "🏔️",
     color: "#10b981",
     accentColor: "#d1fae5",
     photos: [
-      { id: "p1", src: "/assets/fotos/utfpr-guarapuava/foto1.jpg", caption: "Campus Guarapuava" },
-      { id: "p2", src: "/assets/fotos/utfpr-guarapuava/foto2.jpg", caption: "A cidade entre montanhas" },
+      { id: "p1", src: "/fotos/utfpr-guarapuava/foto1.jpg", caption: "No ônibus 🚌" },
+      { id: "p2", src: "/fotos/utfpr-guarapuava/foto2.jpg", caption: "Juntinhas 🥰" },
+      { id: "p3", src: "/fotos/utfpr-guarapuava/foto3.jpg", caption: "Dormindo no seu colo 💚" },
     ],
-    videos: [
-      { id: "v1", title: "A jornada a Guarapuava", src: "", thumbnail: "" },
-    ],
+    videos: [],
     story: [
       {
         id: "s1",
         heading: "Novos horizontes",
-        text: "Guarapuava fica mais longe. Mas distância é só física. A gente aprendeu cedo que o que importa não pode ser medido em quilômetros.",
-      },
-      {
-        id: "s2",
-        text: "Cada visita era uma aventura própria. Uma nova cidade, uma nova sensação, mas sempre o mesmo sentimento de estar no lugar certo quando a gente estava junto.",
+        text: "Aahh vou ser sincera, eu não tava muito empolgada no começo. Acordar cedo e tomar banho frio foi beeem difícil.\n\nMas, no final de cada dia, eu dormia ao lado do meu amor, e isso fazia tudo valer a pena.\n\nTambém me senti muito culpada por estar doente e por achar que estava estragando uma experiência que estávamos vivendo juntos. Mas você foi tão boa comigo, tão paciente e carinhosa, que me fez sentir acolhida o tempo todo.",
       },
     ],
     messages: [
@@ -323,7 +318,7 @@ export const CHAPTERS: Record<string, Chapter> = {
         id: "m1",
         author: "Você",
         avatar: "🏔️",
-        text: "Guarapuava nunca foi longe. Você estava lá.",
+        text: "Quando eu não conseguia cuidar de mim, você cuidou por nós duas.",
         date: "13 de junho de 2026",
       },
     ],
