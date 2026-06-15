@@ -11,19 +11,20 @@ export default function MapPage() {
       className="relative w-screen h-screen overflow-hidden"
       style={{ background: "#0a0704" }}
     >
-      {/* ── BACKGROUND MAP ── */}
+      {/* ── BACKGROUND MAP — starts below the 48px HUD ── */}
       <img
         src={`${import.meta.env.BASE_URL}mapa-rpg-illustration.png`}
         alt="Mapa RPG"
-        className="w-full h-full object-cover select-none"
+        className="absolute left-0 right-0 bottom-0 w-full object-cover select-none"
+        style={{ top: "48px", height: "calc(100% - 48px)" }}
         draggable={false}
       />
 
       {/* ── CLOUD LAYER ── */}
       <CloudLayer />
 
-      {/* ── MAP MARKERS ── */}
-      <div className="absolute inset-0">
+      {/* ── MAP MARKERS — same offset so percentages align with the map image ── */}
+      <div className="absolute left-0 right-0 bottom-0" style={{ top: "48px" }}>
         {MAP_MARKERS.map((marker) => (
           <MapMarkerComponent key={marker.id} marker={marker} />
         ))}
