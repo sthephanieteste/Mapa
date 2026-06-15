@@ -82,6 +82,12 @@ export default function ChapterPage() {
   const [confirmReset, setConfirmReset] = useState(false);
   const [resetKey, setResetKey] = useState(0);
   const [showSmoke, setShowSmoke] = useState<"in" | "out" | null>(null);
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  function handleChapterComplete(_nextId: string | null) {
+    setShowSuccess(true);
+    setTimeout(() => navigate("/map"), 2800);
+  }
 
   const chapter = CHAPTERS[params.id ?? ""];
 
@@ -395,7 +401,7 @@ export default function ChapterPage() {
             isCompleted={isCompleted(chapter.id)}
             completeChapter={completeChapter}
             nextChapterId={nextChapter(chapter.id)}
-            onNavigateNext={(id) => navigate(`/chapter/${id}`)}
+            onNavigateNext={handleChapterComplete}
             onNavigateMap={() => navigate("/map")}
           />
         ) : chapter.id === "a-viagem" ? (
@@ -405,7 +411,7 @@ export default function ChapterPage() {
             isCompleted={isCompleted(chapter.id)}
             completeChapter={completeChapter}
             nextChapterId={nextChapter(chapter.id)}
-            onNavigateNext={(id) => navigate(`/chapter/${id}`)}
+            onNavigateNext={handleChapterComplete}
             onNavigateMap={() => navigate("/map")}
           />
         ) : chapter.id === "utfpr" ? (
@@ -415,7 +421,7 @@ export default function ChapterPage() {
             isCompleted={isCompleted(chapter.id)}
             completeChapter={completeChapter}
             nextChapterId={nextChapter(chapter.id)}
-            onNavigateNext={(id) => navigate(`/chapter/${id}`)}
+            onNavigateNext={handleChapterComplete}
             onNavigateMap={() => navigate("/map")}
           />
         ) : chapter.id === "della-pazetti" ? (
@@ -425,7 +431,7 @@ export default function ChapterPage() {
             isCompleted={isCompleted(chapter.id)}
             completeChapter={completeChapter}
             nextChapterId={nextChapter(chapter.id)}
-            onNavigateNext={(id) => navigate(`/chapter/${id}`)}
+            onNavigateNext={handleChapterComplete}
             onNavigateMap={() => navigate("/map")}
           />
         ) : chapter.id === "cristo-cornelio" ? (
@@ -435,7 +441,7 @@ export default function ChapterPage() {
             isCompleted={isCompleted(chapter.id)}
             completeChapter={completeChapter}
             nextChapterId={nextChapter(chapter.id)}
-            onNavigateNext={(id) => navigate(`/chapter/${id}`)}
+            onNavigateNext={handleChapterComplete}
             onNavigateMap={() => navigate("/map")}
           />
         ) : chapter.id === "utfpr-guarapuava" ? (
@@ -445,7 +451,7 @@ export default function ChapterPage() {
             isCompleted={isCompleted(chapter.id)}
             completeChapter={completeChapter}
             nextChapterId={nextChapter(chapter.id)}
-            onNavigateNext={(id) => navigate(`/chapter/${id}`)}
+            onNavigateNext={handleChapterComplete}
             onNavigateMap={() => navigate("/map")}
           />
         ) : chapter.id === "o-futuro" ? (
@@ -455,7 +461,7 @@ export default function ChapterPage() {
             isCompleted={isCompleted(chapter.id)}
             completeChapter={completeChapter}
             nextChapterId={nextChapter(chapter.id)}
-            onNavigateNext={(id) => navigate(`/chapter/${id}`)}
+            onNavigateNext={handleChapterComplete}
             onNavigateMap={() => navigate("/map")}
           />
         ) : (
@@ -465,7 +471,7 @@ export default function ChapterPage() {
             isCompleted={isCompleted(chapter.id)}
             completeChapter={completeChapter}
             nextChapterId={nextChapter(chapter.id)}
-            onNavigateNext={(id) => navigate(`/chapter/${id}`)}
+            onNavigateNext={handleChapterComplete}
             onNavigateMap={() => navigate("/map")}
           />
         )}
@@ -612,6 +618,37 @@ export default function ChapterPage() {
             }}>
               ✦ Recomeçando... ✦
             </p>
+          </div>
+        </div>
+      )}
+
+      {/* ── CHAPTER COMPLETION SUCCESS OVERLAY ── */}
+      {showSuccess && (
+        <div
+          style={{
+            position: "fixed", inset: 0, zIndex: 110,
+            display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "20px",
+            background: "rgba(4,2,1,0.92)", backdropFilter: "blur(8px)",
+            animation: "fadeIn 0.5s ease",
+          }}
+        >
+          <div style={{ fontSize: "64px", animation: "float 2s ease-in-out infinite", filter: `drop-shadow(0 0 30px ${chapter.color}80)` }}>
+            {chapter.icon}
+          </div>
+          <div style={{ textAlign: "center" }}>
+            <p style={{ fontFamily: "Georgia, serif", fontSize: "clamp(18px,3vw,26px)", fontWeight: "bold", color: "#f0d888", letterSpacing: "0.12em", textShadow: `0 0 30px ${chapter.color}60`, marginBottom: "10px" }}>
+              Capítulo Concluído!
+            </p>
+            <p style={{ fontFamily: "Georgia, serif", fontSize: "14px", color: `${chapter.color}CC`, letterSpacing: "0.08em" }}>
+              {chapter.title}
+            </p>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <span style={{ color: chapter.color, fontSize: "18px", animation: "pulse-heart 1.5s ease-in-out infinite" }}>✦</span>
+            <p style={{ fontFamily: "Georgia, serif", fontSize: "12px", color: "rgba(200,160,80,0.65)", letterSpacing: "0.18em" }}>
+              VOLTANDO AO MAPA...
+            </p>
+            <span style={{ color: chapter.color, fontSize: "18px", animation: "pulse-heart 1.5s ease-in-out infinite" }}>✦</span>
           </div>
         </div>
       )}

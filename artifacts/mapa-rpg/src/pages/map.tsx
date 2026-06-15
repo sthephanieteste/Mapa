@@ -10,7 +10,7 @@ export default function MapPage() {
       className="relative w-screen h-screen overflow-hidden"
       style={{ background: "#0a0704" }}
     >
-      {/* ── BACKGROUND MAP — UNTOUCHED ── */}
+      {/* ── BACKGROUND MAP ── */}
       <img
         src={`${import.meta.env.BASE_URL}mapa-rpg-illustration.png`}
         alt="Mapa RPG"
@@ -18,20 +18,20 @@ export default function MapPage() {
         draggable={false}
       />
 
-      {/* ── CLOUD LAYER — locked regions covered with fog ── */}
+      {/* ── CLOUD LAYER ── */}
       <CloudLayer />
 
-      {/* ── MAP MARKERS — UNTOUCHED ── */}
+      {/* ── MAP MARKERS ── */}
       <div className="absolute inset-0">
         {MAP_MARKERS.map((marker) => (
           <MapMarkerComponent key={marker.id} marker={marker} />
         ))}
       </div>
 
-      {/* ── UNLOCK CELEBRATION — particles + glow burst ── */}
+      {/* ── UNLOCK CELEBRATION ── */}
       <UnlockCelebration />
 
-      {/* ── GAME HUD — NEW LAYER ON TOP ── */}
+      {/* ── GAME HUD — solid 48px bar, gradient below is pointer-events:none ── */}
       <GameHUD />
 
       {/* ── HINT LABEL ── */}
