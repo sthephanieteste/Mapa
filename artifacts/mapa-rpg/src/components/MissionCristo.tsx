@@ -65,7 +65,7 @@ Foi braba.`,
   },
   {
     key: "analigia",
-    icon: "📱",
+    icon: "👑",
     name: "Ana Lígia",
     role: "Membro Remoto",
     text: `Membro remoto da operação.
