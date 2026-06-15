@@ -277,11 +277,7 @@ export const CHAPTERS: Record<string, Chapter> = {
       {
         id: "s1",
         heading: "O momento mais especial",
-        text: "Tem momentos que a gente ensaia na cabeça mil vezes. E quando chegam, são completamente diferentes do que imaginou — e ainda mais perfeitos.",
-      },
-      {
-        id: "s2",
-        text: "Embaixo do Cristo de Cornélio, com a cidade ao fundo e o coração acelerado, o que parecia difícil de dizer saiu naturalmente. E a sua resposta foi a melhor coisa que já ouvi.",
+        text: "O pedido de namoro foi uma verdadeira loucura.\n\nEu não tinha certeza do seu \"sim\", e isso só deixava tudo mais assustador. Todo mundo tinha uma opinião: em casa, em um restaurante, em algum lugar mais reservado. Quase ninguém apoiava a ideia de fazer o pedido no Cristo.\n\nMas eu te conhecia.\n\nE por isso sabia que precisava ser especial.\n\nQuando chegou a hora, mal consegui falar direito. O nervosismo tomou conta de mim, as palavras saíam tortas e meu coração parecia querer fugir.\n\nMas, de alguma forma, deu certo.\n\nE aquele momento, que começou como uma loucura, se tornou o início da nossa história.",
       },
     ],
     messages: [
@@ -289,7 +285,7 @@ export const CHAPTERS: Record<string, Chapter> = {
         id: "m1",
         author: "Você",
         avatar: "✝️",
-        text: "Aquele sim mudou tudo. Obrigado por ele. Para sempre.",
+        text: "Desde a primeira vez que te vi, pensei: \"é ela\".",
         date: "13 de junho de 2026",
       },
     ],
