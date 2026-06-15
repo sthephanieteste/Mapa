@@ -47,6 +47,7 @@ export interface MapMarker {
   left: string;
   icon: string;
   color: string;
+  featured?: boolean;
 }
 
 export const MAP_MARKERS: MapMarker[] = [
@@ -90,10 +91,11 @@ export const MAP_MARKERS: MapMarker[] = [
     id: "cristo-cornelio",
     label: "Cristo de Cornélio",
     shortDesc: "O pedido que mudou nossa história",
-    top: "60%",
-    left: "32%",
+    top: "64%",
+    left: "23%",
     icon: "✝️",
     color: "#f59e0b",
+    featured: true,
   },
   {
     id: "utfpr-guarapuava",
