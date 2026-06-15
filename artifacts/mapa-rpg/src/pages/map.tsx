@@ -3,6 +3,7 @@ import MapMarkerComponent from "@/components/MapMarker";
 import GameHUD from "@/components/GameHUD";
 import CloudLayer from "@/components/CloudLayer";
 import UnlockCelebration from "@/components/UnlockCelebration";
+import SecretEnding from "@/components/SecretEnding";
 
 export default function MapPage() {
   return (
@@ -33,6 +34,9 @@ export default function MapPage() {
 
       {/* ── GAME HUD — solid 48px bar, gradient below is pointer-events:none ── */}
       <GameHUD />
+
+      {/* ── SECRET ENDING ── */}
+      <SecretEnding />
 
       {/* ── HINT LABEL ── */}
       <div

@@ -2,10 +2,21 @@ import { useEffect, useReducer, useCallback } from "react";
 import { CHAPTER_ORDER } from "@/data/progression";
 
 export const STORAGE_KEY = "nossa-historia-progress";
+export const ENDING_SHOWN_KEY = "nossa-historia-ending-shown";
+export const ENDING_UNLOCKED_KEY = "nossa-historia-ending-unlocked";
 
 interface ProgressState {
   unlockedChapters: string[];
   completedChapters: string[];
+  endingUnlocked: boolean;
+}
+
+function loadEndingUnlocked(): boolean {
+  try {
+    return localStorage.getItem(ENDING_UNLOCKED_KEY) === "true";
+  } catch {
+    return false;
+  }
 }
 
 function loadProgress(): ProgressState {
@@ -17,13 +28,14 @@ function loadProgress(): ProgressState {
         Array.isArray(parsed.unlockedChapters) &&
         Array.isArray(parsed.completedChapters)
       ) {
-        return parsed;
+        return { ...parsed, endingUnlocked: loadEndingUnlocked() };
       }
     }
   } catch {}
   return {
     unlockedChapters: [CHAPTER_ORDER[0]],
     completedChapters: [],
+    endingUnlocked: loadEndingUnlocked(),
   };
 }
 
@@ -85,13 +97,23 @@ export function useProgress() {
     setState({ unlockedChapters, completedChapters });
   }, []);
 
+  const unlockEnding = useCallback(() => {
+    if (_state.endingUnlocked) return;
+    try {
+      localStorage.setItem(ENDING_UNLOCKED_KEY, "true");
+    } catch {}
+    setState({ ..._state, endingUnlocked: true });
+  }, []);
+
   // Wipe everything and reload to the initial state
   const resetAll = useCallback(() => {
     try {
       localStorage.removeItem(STORAGE_KEY);
       localStorage.removeItem("nossa-historia-playlist");
+      localStorage.removeItem(ENDING_SHOWN_KEY);
+      localStorage.removeItem(ENDING_UNLOCKED_KEY);
     } catch {}
-    _state = { unlockedChapters: [CHAPTER_ORDER[0]], completedChapters: [] };
+    _state = { unlockedChapters: [CHAPTER_ORDER[0]], completedChapters: [], endingUnlocked: false };
     _listeners.forEach((l) => l());
     window.location.href = "/";
   }, []);
@@ -119,10 +141,12 @@ export function useProgress() {
     completeChapter,
     resetChapter,
     resetAll,
+    unlockEnding,
     completedCount: _state.completedChapters.length,
     totalCount: CHAPTER_ORDER.length,
     nextChapter,
     unlockedChapters: _state.unlockedChapters,
     completedChapters: _state.completedChapters,
+    endingUnlocked: _state.endingUnlocked,
   };
 }

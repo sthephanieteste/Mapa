@@ -5,6 +5,7 @@ import MusicLibrary from "./MusicLibrary";
 import { useProgress } from "@/hooks/useProgress";
 import { useMusicPlayer } from "@/hooks/useMusicPlayer";
 import { CHAPTERS } from "@/data/chapters";
+import { openFinalScroll } from "@/components/SecretEnding";
 
 type ConfirmAction = "resetAll" | { type: "resetChapter"; id: string };
 
@@ -15,7 +16,7 @@ export default function GameHUD() {
   const [showMusicLibrary, setShowMusicLibrary] = useState(false);
   const [confirmAction, setConfirmAction] = useState<ConfirmAction | null>(null);
 
-  const { completedCount, totalCount, completedChapters, resetAll, resetChapter } = useProgress();
+  const { completedCount, totalCount, completedChapters, resetAll, resetChapter, endingUnlocked } = useProgress();
   const { playing, currentIdx, playlist, toggle, next } = useMusicPlayer();
   const progressPercent = Math.round((completedCount / totalCount) * 100);
 
@@ -149,6 +150,16 @@ export default function GameHUD() {
             >
               🏆 Ver Conquistas
             </button>
+
+            {endingUnlocked && (
+              <button
+                onClick={() => { closeMenu(); openFinalScroll(); }}
+                className="w-full text-left px-3 py-2.5 rounded-lg mb-0.5 transition-all hover:bg-white/5"
+                style={{ color: "rgba(240,210,120,0.95)", fontFamily: "Georgia, serif", fontSize: "13px", textShadow: "0 0 8px rgba(200,150,40,0.4)" }}
+              >
+                📜 Pergaminho Final
+              </button>
+            )}
 
             <div style={{ height: "1px", background: "rgba(200,140,40,0.14)", margin: "6px 0" }} />
 
