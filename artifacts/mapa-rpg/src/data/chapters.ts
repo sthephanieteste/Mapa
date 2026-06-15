@@ -335,8 +335,12 @@ export const CHAPTERS: Record<string, Chapter> = {
     icon: "✨",
     color: "#f59e0b",
     accentColor: "#fef9c3",
-    photos: [],
-    videos: [],
+    photos: [
+      { id: "p1", src: "/fotos/o-futuro/foto1.jpg", caption: "Nós ❤️" },
+    ],
+    videos: [
+      { id: "v1", title: "Nossa memória 🎬", src: "/fotos/o-futuro/video1.mp4", thumbnail: "" },
+    ],
     story: [
       {
         id: "s1",

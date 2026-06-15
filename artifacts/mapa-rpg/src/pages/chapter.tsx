@@ -2,6 +2,7 @@ import { useParams, useLocation } from "wouter";
 import { CHAPTERS } from "@/data/chapters";
 import { useState } from "react";
 import Avatar from "@/components/Avatar";
+import { musicControls } from "@/hooks/useMusicPlayer";
 import { useProgress } from "@/hooks/useProgress";
 import { getQuiz } from "@/data/quizStorage";
 import AvatarQuiz from "@/components/AvatarQuiz";
@@ -53,6 +54,20 @@ function PlaceholderVideo({ title }: { title: string }) {
         <p className="text-xs mt-1" style={{ color: "rgba(180,140,60,0.5)" }}>Adicione o vídeo aqui</p>
       </div>
     </div>
+  );
+}
+
+function ChapterVideo({ src }: { src: string }) {
+  return (
+    <video
+      controls
+      className="w-full aspect-video"
+      src={src}
+      style={{ display: "block" }}
+      onPlay={() => musicControls.pauseForVideo()}
+      onPause={() => musicControls.resumeFromVideo()}
+      onEnded={() => musicControls.resumeFromVideo()}
+    />
   );
 }
 
@@ -288,7 +303,7 @@ export default function ChapterPage() {
                 {chapter.videos.map((video) =>
                   video.src ? (
                     <div key={video.id} className="rounded-lg overflow-hidden" style={{ border: `1px solid ${chapter.color}20` }}>
-                      <video controls className="w-full aspect-video" src={video.src} />
+                      <ChapterVideo src={video.src} />
                       <p className="text-xs px-3 py-2" style={{ color: "rgba(200,160,80,0.6)", fontFamily: "Georgia, serif" }}>
                         {video.title}
                       </p>

@@ -24,6 +24,7 @@ export const STORAGE_KEY = "nossa-historia-playlist";
 let _audioEl: HTMLAudioElement | null = null;
 let _currentIdx = 0;
 let _isPlaying = false;
+let _pausedForVideo = false;
 let _fadeTimer: ReturnType<typeof setInterval> | null = null;
 const _listeners = new Set<() => void>();
 
@@ -142,6 +143,21 @@ export const musicControls = {
 
   playTrack(idx: number) {
     _playTrackInternal(idx, true);
+  },
+
+  pauseForVideo() {
+    if (!_isPlaying) return;
+    _pausedForVideo = true;
+    const audio = _getAudio();
+    _fadeOut(audio, () => {});
+  },
+
+  resumeFromVideo() {
+    if (!_pausedForVideo) return;
+    _pausedForVideo = false;
+    if (_isPlaying) {
+      _fadeIn(_getAudio());
+    }
   },
 
   getState() {
