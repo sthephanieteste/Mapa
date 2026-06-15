@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MAP_MARKERS } from "@/data/chapters";
 import { useProgress } from "@/hooks/useProgress";
 
 export const ENDING_SHOWN_KEY = "nossa-historia-ending-shown";
@@ -10,14 +9,7 @@ export function openFinalScroll() {
   window.dispatchEvent(new CustomEvent("open-final-scroll"));
 }
 
-type Phase =
-  | "idle"
-  | "awakening"
-  | "fragments"
-  | "assembly"
-  | "prompt"
-  | "opening"
-  | "reading";
+type Phase = "idle" | "prompt" | "opening" | "reading";
 
 const LETTER_PARAGRAPHS = [
   "Se você está lendo isso, significa que encontrou todos os pedaços da nossa história.",
@@ -46,36 +38,14 @@ const LETTER_PARAGRAPHS = [
   "Eu te amo. ❤️",
 ];
 
-interface FragmentData {
-  id: string;
-  icon: string;
-  color: string;
-  startX: number;
-  startY: number;
-}
-
 export default function SecretEnding() {
   const { completedCount, totalCount, unlockEnding } = useProgress();
   const [phase, setPhase] = useState<Phase>("idle");
-  const [fragments, setFragments] = useState<FragmentData[]>([]);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const hasStarted = useRef(false);
 
   const allComplete = completedCount === totalCount && totalCount > 0;
 
-  const buildFragments = useCallback(() => {
-    const cx = window.innerWidth / 2;
-    const cy = window.innerHeight / 2;
-    return MAP_MARKERS.map((m) => ({
-      id: m.id,
-      icon: m.icon,
-      color: m.color,
-      startX: (parseFloat(m.left) / 100) * window.innerWidth - cx,
-      startY: (parseFloat(m.top) / 100) * window.innerHeight - cy,
-    }));
-  }, []);
-
-  // Auto-trigger on first full completion
   useEffect(() => {
     if (!allComplete) return;
     if (hasStarted.current) return;
@@ -84,40 +54,22 @@ export default function SecretEnding() {
     } catch {}
 
     hasStarted.current = true;
-    setFragments(buildFragments());
-
-    const t = (ms: number, fn: () => void) => {
-      const id = setTimeout(fn, ms);
-      timers.current.push(id);
-      return id;
-    };
-
-    try {
-      localStorage.setItem(ENDING_SHOWN_KEY, "true");
-    } catch {}
-
-    setPhase("awakening");
-    t(1600, () => setPhase("fragments"));
-    t(1600 + 3400, () => setPhase("assembly"));
-    t(1600 + 3400 + 2200, () => setPhase("prompt"));
+    try { localStorage.setItem(ENDING_SHOWN_KEY, "true"); } catch {}
+    setPhase("prompt");
 
     return () => timers.current.forEach(clearTimeout);
-  }, [allComplete, buildFragments]);
+  }, [allComplete]);
 
-  // Listen for "open from HUD" event
   useEffect(() => {
-    const handler = () => {
-      setFragments(buildFragments());
-      setPhase("reading");
-    };
+    const handler = () => setPhase("reading");
     window.addEventListener("open-final-scroll", handler);
     return () => window.removeEventListener("open-final-scroll", handler);
-  }, [buildFragments]);
+  }, []);
 
   const handleOpenScroll = useCallback(() => {
     unlockEnding();
     setPhase("opening");
-    const id = setTimeout(() => setPhase("reading"), 2200);
+    const id = setTimeout(() => setPhase("reading"), 2000);
     timers.current.push(id);
   }, [unlockEnding]);
 
@@ -129,173 +81,50 @@ export default function SecretEnding() {
   if (phase === "idle") return null;
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 200,
-        pointerEvents: phase === "awakening" ? "none" : "all",
-      }}
-    >
-      {/* ── Dim overlay ── */}
+    <div style={{ position: "fixed", inset: 0, zIndex: 200, pointerEvents: "all" }}>
+
+      {/* ── Dim backdrop ── */}
       <AnimatePresence>
-        {(phase === "awakening" || phase === "fragments" || phase === "assembly" || phase === "prompt") && (
+        {(phase === "prompt" || phase === "reading") && (
           <motion.div
             key="dim"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1.2 }}
+            transition={{ duration: 0.8 }}
             style={{
               position: "absolute",
               inset: 0,
-              background: "rgba(4,2,1,0.55)",
+              background: "rgba(4,2,1,0.88)",
+              backdropFilter: "blur(10px)",
               pointerEvents: "none",
             }}
           />
         )}
       </AnimatePresence>
 
-      {/* ── Awakening: marker glows ── */}
-      <AnimatePresence>
-        {(phase === "awakening" || phase === "fragments") &&
-          MAP_MARKERS.map((m, i) => (
-            <motion.div
-              key={`glow-${m.id}`}
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: [0, 1, 0.6, 1, 0.7], scale: [0.5, 1.8, 1.4, 1.9, 1.5] }}
-              exit={{ opacity: 0, scale: 0 }}
-              transition={{ duration: 1.4, delay: i * 0.12, ease: "easeOut" }}
-              style={{
-                position: "absolute",
-                top: m.top,
-                left: m.left,
-                transform: "translate(-50%, -50%)",
-                width: 80,
-                height: 80,
-                borderRadius: "50%",
-                background: `radial-gradient(circle, ${m.color}90 0%, ${m.color}40 40%, transparent 70%)`,
-                pointerEvents: "none",
-              }}
-            />
-          ))}
-      </AnimatePresence>
-
-      {/* ── Fragment phase: parchment pieces fly to center ── */}
-      <AnimatePresence>
-        {(phase === "fragments" || phase === "assembly") &&
-          fragments.map((frag, i) => (
-            <motion.div
-              key={`frag-${frag.id}`}
-              initial={{
-                x: frag.startX,
-                y: frag.startY,
-                rotate: (i % 2 === 0 ? 1 : -1) * (15 + i * 8),
-                scale: 0,
-                opacity: 0,
-              }}
-              animate={
-                phase === "assembly"
-                  ? { x: 0, y: 0, rotate: 0, scale: 0, opacity: 0 }
-                  : {
-                      x: [frag.startX, frag.startX * 0.4, 0],
-                      y: [frag.startY, frag.startY * 0.4 - 30, 0],
-                      rotate: [
-                        (i % 2 === 0 ? 1 : -1) * (15 + i * 8),
-                        (i % 2 === 0 ? -1 : 1) * 5,
-                        0,
-                      ],
-                      scale: [0, 1.2, 1],
-                      opacity: [0, 1, 1],
-                    }
-              }
-              transition={
-                phase === "assembly"
-                  ? { duration: 0.6, delay: i * 0.06, ease: "easeIn" }
-                  : {
-                      duration: 1.6,
-                      delay: i * 0.22,
-                      ease: [0.25, 0.46, 0.45, 0.94],
-                    }
-              }
-              style={{
-                position: "fixed",
-                top: "50%",
-                left: "50%",
-                marginTop: -20,
-                marginLeft: -18,
-                width: 36,
-                height: 28,
-                borderRadius: "4px 8px 4px 8px",
-                background: `linear-gradient(135deg, #e8d4a0, #d4b870, #c49840)`,
-                border: `1px solid ${frag.color}80`,
-                boxShadow: `0 0 10px ${frag.color}60, inset 0 0 6px rgba(0,0,0,0.15)`,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "14px",
-                filter: `drop-shadow(0 0 6px ${frag.color}80)`,
-                pointerEvents: "none",
-              }}
-            >
-              {frag.icon}
-            </motion.div>
-          ))}
-      </AnimatePresence>
-
-      {/* ── Assembly: scroll forms at center ── */}
-      <AnimatePresence>
-        {(phase === "assembly" || phase === "prompt") && (
-          <motion.div
-            key="scroll-form"
-            initial={{ scale: 0, opacity: 0, rotate: -8 }}
-            animate={{ scale: 1, opacity: 1, rotate: 0 }}
-            exit={{ scale: 0, opacity: 0 }}
-            transition={{ duration: 0.9, delay: 0.3, ease: [0.34, 1.56, 0.64, 1] }}
-            style={{
-              position: "fixed",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: 180,
-              height: 220,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            {/* Scroll shape */}
-            <ScrollShape glowing={phase === "prompt"} />
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* ── Prompt: message + button ── */}
+      {/* ── Prompt: scroll shape + open button ── */}
       <AnimatePresence>
         {phase === "prompt" && (
           <motion.div
             key="prompt"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            initial={{ opacity: 0, scale: 0.88 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.92 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
             style={{
-              position: "fixed",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
+              position: "absolute",
+              inset: 0,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              gap: "20px",
-              width: "min(90vw, 380px)",
-              marginTop: 140,
+              justifyContent: "center",
+              gap: "28px",
+              padding: "24px",
             }}
           >
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.7, duration: 1 }}
+            <ScrollShape glowing />
+            <p
               style={{
                 fontFamily: "Georgia, serif",
                 fontSize: "clamp(13px, 2vw, 16px)",
@@ -304,16 +133,17 @@ export default function SecretEnding() {
                 letterSpacing: "0.03em",
                 lineHeight: 1.6,
                 textShadow: "0 0 20px rgba(200,150,40,0.5)",
+                maxWidth: "360px",
               }}
             >
               Você reuniu todos os capítulos da nossa história.
-            </motion.p>
+            </p>
             <motion.button
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
               whileHover={{ scale: 1.06 }}
               whileTap={{ scale: 0.97 }}
-              transition={{ delay: 1.1, duration: 0.5, type: "spring", stiffness: 260 }}
               onClick={handleOpenScroll}
               style={{
                 fontFamily: "Georgia, serif",
@@ -335,7 +165,7 @@ export default function SecretEnding() {
         )}
       </AnimatePresence>
 
-      {/* ── Opening: scroll unfurl animation ── */}
+      {/* ── Opening: unfurl animation ── */}
       <AnimatePresence>
         {phase === "opening" && (
           <>
@@ -344,7 +174,7 @@ export default function SecretEnding() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               style={{
-                position: "fixed",
+                position: "absolute",
                 inset: 0,
                 background: "rgba(4,2,1,0.85)",
                 backdropFilter: "blur(8px)",
@@ -356,7 +186,7 @@ export default function SecretEnding() {
               animate={{ scaleY: 1, opacity: 1 }}
               transition={{ duration: 1.8, ease: [0.25, 0.1, 0.25, 1] }}
               style={{
-                position: "fixed",
+                position: "absolute",
                 top: "50%",
                 left: "50%",
                 transformOrigin: "top center",
@@ -377,31 +207,25 @@ export default function SecretEnding() {
       {/* ── Reading: full letter ── */}
       <AnimatePresence>
         {phase === "reading" && (
-          <>
-            <motion.div
-              key="reading-backdrop"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6 }}
-              style={{
-                position: "fixed",
-                inset: 0,
-                background: "rgba(4,2,1,0.88)",
-                backdropFilter: "blur(10px)",
-              }}
-            />
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "16px",
+              overflowY: "auto",
+            }}
+          >
             <motion.div
               key="letter-parchment"
               initial={{ opacity: 0, scale: 0.92, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 0.7, ease: "easeOut" }}
               style={{
-                position: "fixed",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
                 width: "min(92vw, 580px)",
-                maxHeight: "86vh",
+                maxHeight: "calc(100dvh - 32px)",
                 display: "flex",
                 flexDirection: "column",
               }}
@@ -415,12 +239,12 @@ export default function SecretEnding() {
                   flex: 1,
                   overflowY: "auto",
                   background: "linear-gradient(180deg, #f5e6c0 0%, #ead5a0 50%, #f0dfa8 100%)",
-                  padding: "28px 32px 32px",
+                  padding: "20px 28px 32px",
                   boxShadow: "inset 0 0 40px rgba(160,100,20,0.15), 0 8px 40px rgba(0,0,0,0.6)",
                   position: "relative",
                 }}
               >
-                {/* Aged paper texture overlay */}
+                {/* Aged paper texture */}
                 <div
                   style={{
                     position: "absolute",
@@ -431,12 +255,38 @@ export default function SecretEnding() {
                   }}
                 />
 
+                {/* Close button — top-right of parchment */}
+                <button
+                  onClick={handleClose}
+                  title="Fechar pergaminho"
+                  style={{
+                    position: "absolute",
+                    top: 12,
+                    right: 12,
+                    width: 30,
+                    height: 30,
+                    borderRadius: "50%",
+                    background: "rgba(90,50,10,0.12)",
+                    border: "1px solid rgba(90,53,10,0.35)",
+                    color: "#7a4a18",
+                    fontSize: "15px",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    zIndex: 10,
+                    lineHeight: 1,
+                  }}
+                >
+                  ✕
+                </button>
+
                 {/* Title */}
                 <motion.div
                   initial={{ opacity: 0, y: -8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2, duration: 0.6 }}
-                  style={{ textAlign: "center", marginBottom: "24px" }}
+                  style={{ textAlign: "center", marginBottom: "24px", paddingTop: "8px" }}
                 >
                   <p
                     style={{
@@ -487,7 +337,7 @@ export default function SecretEnding() {
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 1.8, duration: 0.5, type: "spring", stiffness: 200 }}
-                  style={{ textAlign: "center", marginTop: "8px" }}
+                  style={{ textAlign: "center", marginTop: "8px", paddingBottom: "8px" }}
                 >
                   <div
                     style={{
@@ -509,35 +359,44 @@ export default function SecretEnding() {
 
               {/* Scroll rod bottom */}
               <ScrollRod />
-
-              {/* Close button */}
-              <motion.button
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.8 }}
-                onClick={handleClose}
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.97 }}
-                style={{
-                  marginTop: "14px",
-                  alignSelf: "center",
-                  fontFamily: "Georgia, serif",
-                  fontSize: "13px",
-                  color: "rgba(210,175,100,0.75)",
-                  background: "transparent",
-                  border: "1px solid rgba(200,155,50,0.3)",
-                  borderRadius: "30px",
-                  padding: "8px 22px",
-                  cursor: "pointer",
-                  letterSpacing: "0.06em",
-                }}
-              >
-                ✦ Fechar ✦
-              </motion.button>
             </motion.div>
-          </>
+          </div>
         )}
       </AnimatePresence>
+    </div>
+  );
+}
+
+function ScrollRod() {
+  return (
+    <div
+      style={{
+        width: "100%",
+        height: 20,
+        borderRadius: "10px",
+        background: "linear-gradient(180deg, #d4aa50 0%, #a07828 50%, #c49840 100%)",
+        boxShadow: "0 3px 10px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,220,100,0.3)",
+        flexShrink: 0,
+        position: "relative",
+      }}
+    >
+      {/* End knobs */}
+      {([-1, 1] as const).map((side) => (
+        <div
+          key={side}
+          style={{
+            position: "absolute",
+            top: "50%",
+            [side === -1 ? "left" : "right"]: -4,
+            transform: "translateY(-50%)",
+            width: 28,
+            height: 28,
+            borderRadius: "50%",
+            background: "radial-gradient(circle at 35% 35%, #e8c060, #a07828)",
+            boxShadow: "0 2px 6px rgba(0,0,0,0.5)",
+          }}
+        />
+      ))}
     </div>
   );
 }
@@ -545,7 +404,6 @@ export default function SecretEnding() {
 function ScrollShape({ glowing }: { glowing: boolean }) {
   return (
     <div style={{ position: "relative", width: 180, height: 220 }}>
-      {/* Glow backdrop */}
       {glowing && (
         <motion.div
           animate={{ opacity: [0.4, 0.9, 0.5], scale: [0.9, 1.15, 0.95] }}
@@ -554,14 +412,11 @@ function ScrollShape({ glowing }: { glowing: boolean }) {
             position: "absolute",
             inset: -20,
             borderRadius: "50%",
-            background:
-              "radial-gradient(ellipse, rgba(220,180,60,0.35) 0%, rgba(200,140,20,0.15) 50%, transparent 70%)",
+            background: "radial-gradient(ellipse, rgba(220,180,60,0.35) 0%, rgba(200,140,20,0.15) 50%, transparent 70%)",
             pointerEvents: "none",
           }}
         />
       )}
-
-      {/* Scroll rod top */}
       <div
         style={{
           position: "absolute",
@@ -575,8 +430,6 @@ function ScrollShape({ glowing }: { glowing: boolean }) {
           boxShadow: "0 2px 8px rgba(0,0,0,0.4)",
         }}
       />
-
-      {/* Scroll body */}
       <div
         style={{
           position: "absolute",
@@ -584,8 +437,7 @@ function ScrollShape({ glowing }: { glowing: boolean }) {
           bottom: 8,
           left: "5%",
           right: "5%",
-          background:
-            "linear-gradient(180deg, #f0e2b8 0%, #e8d4a0 40%, #ddc888 70%, #e8d4a0 100%)",
+          background: "linear-gradient(180deg, #f0e2b8 0%, #e8d4a0 40%, #ddc888 70%, #e8d4a0 100%)",
           borderRadius: "3px",
           boxShadow: "inset 0 0 20px rgba(160,100,20,0.2), 0 4px 20px rgba(0,0,0,0.4)",
           display: "flex",
@@ -603,8 +455,6 @@ function ScrollShape({ glowing }: { glowing: boolean }) {
           </motion.span>
         )}
       </div>
-
-      {/* Scroll rod bottom */}
       <div
         style={{
           position: "absolute",
@@ -618,38 +468,22 @@ function ScrollShape({ glowing }: { glowing: boolean }) {
           boxShadow: "0 2px 8px rgba(0,0,0,0.4)",
         }}
       />
-
-      {/* Shine sweep */}
       {glowing && (
         <motion.div
-          animate={{ x: ["-100%", "200%"] }}
-          transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 1.5, ease: "easeInOut" }}
+          initial={{ x: "-100%", opacity: 0.6 }}
+          animate={{ x: "200%", opacity: 0 }}
+          transition={{ duration: 2.5, repeat: Infinity, delay: 1, ease: "easeInOut" }}
           style={{
             position: "absolute",
             top: 8,
             bottom: 8,
             left: "5%",
             width: "30%",
-            background:
-              "linear-gradient(90deg, transparent, rgba(255,240,180,0.4), transparent)",
+            background: "linear-gradient(90deg, transparent, rgba(255,240,180,0.4), transparent)",
             pointerEvents: "none",
           }}
         />
       )}
     </div>
-  );
-}
-
-function ScrollRod() {
-  return (
-    <div
-      style={{
-        height: 20,
-        background: "linear-gradient(180deg, #d4a840 0%, #8a6020 50%, #c49840 100%)",
-        borderRadius: "10px",
-        boxShadow: "0 3px 12px rgba(0,0,0,0.5), inset 0 1px 3px rgba(255,220,100,0.3)",
-        flexShrink: 0,
-      }}
-    />
   );
 }

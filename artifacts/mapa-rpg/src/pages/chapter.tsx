@@ -101,7 +101,6 @@ export default function ChapterPage() {
 
   function handleChapterComplete(_nextId: string | null) {
     setShowSuccess(true);
-    setTimeout(() => navigate("/map"), 2800);
   }
 
   const chapter = CHAPTERS[params.id ?? ""];
@@ -642,7 +641,7 @@ export default function ChapterPage() {
         <div
           style={{
             position: "fixed", inset: 0, zIndex: 110,
-            display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "20px",
+            display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "24px",
             background: "rgba(4,2,1,0.92)", backdropFilter: "blur(8px)",
             animation: "fadeIn 0.5s ease",
           }}
@@ -658,12 +657,29 @@ export default function ChapterPage() {
               {chapter.title}
             </p>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <span style={{ color: chapter.color, fontSize: "18px", animation: "pulse-heart 1.5s ease-in-out infinite" }}>✦</span>
-            <p style={{ fontFamily: "Georgia, serif", fontSize: "12px", color: "rgba(200,160,80,0.65)", letterSpacing: "0.18em" }}>
-              VOLTANDO AO MAPA...
-            </p>
-            <span style={{ color: chapter.color, fontSize: "18px", animation: "pulse-heart 1.5s ease-in-out infinite" }}>✦</span>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "12px", marginTop: "8px" }}>
+            <button
+              onClick={() => navigate("/map")}
+              style={{
+                fontFamily: "Georgia, serif", fontSize: "14px", color: "#f0d888",
+                background: `linear-gradient(135deg, ${chapter.color}30, ${chapter.color}15)`,
+                border: `1.5px solid ${chapter.color}70`, borderRadius: "40px",
+                padding: "11px 32px", cursor: "pointer", letterSpacing: "0.08em",
+                boxShadow: `0 0 18px ${chapter.color}25`,
+              }}
+            >
+              ← Voltar ao Mapa
+            </button>
+            <button
+              onClick={() => setShowSuccess(false)}
+              style={{
+                fontFamily: "Georgia, serif", fontSize: "13px", color: "rgba(200,160,80,0.6)",
+                background: "transparent", border: "1px solid rgba(200,140,40,0.25)",
+                borderRadius: "40px", padding: "8px 22px", cursor: "pointer", letterSpacing: "0.06em",
+              }}
+            >
+              Continuar Lendo ↓
+            </button>
           </div>
         </div>
       )}
