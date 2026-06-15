@@ -517,27 +517,21 @@ export default function MissionCristo({
             border: `1px solid ${chapterColor}35`,
             boxShadow: `0 0 60px ${chapterColor}15`,
           }}>
-            {/* Photo placeholder */}
+            {/* Photo do pedido */}
             <div style={{
-              background: `linear-gradient(135deg, ${chapterColor}15, rgba(10,6,2,0.9))`,
               borderBottom: `1px solid ${chapterColor}20`,
-              padding: "28px", textAlign: "center",
+              overflow: "hidden",
             }}>
-              <div style={{
-                width: "100%", maxWidth: "400px", margin: "0 auto",
-                aspectRatio: "4/3", borderRadius: "12px",
-                background: "rgba(12,8,3,0.8)",
-                border: `1px solid ${chapterColor}30`,
-                display: "flex", flexDirection: "column",
-                alignItems: "center", justifyContent: "center", gap: "10px",
-              }}>
-                <div style={{ fontSize: "42px", filter: `drop-shadow(0 0 16px ${chapterColor}80)` }}>
-                  💍
-                </div>
-                <p style={{ fontFamily: "Georgia, serif", fontSize: "11px", color: `${chapterColor}60` }}>
-                  [Foto principal do pedido]
-                </p>
-              </div>
+              <img
+                src="/foto-pedido.jpg"
+                alt="O pedido ❤️"
+                style={{
+                  width: "100%",
+                  display: "block",
+                  objectFit: "cover",
+                  maxHeight: "480px",
+                }}
+              />
             </div>
 
             <div style={{ padding: "28px 28px 24px", textAlign: "center" }}>
