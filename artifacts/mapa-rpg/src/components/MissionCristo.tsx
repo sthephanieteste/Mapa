@@ -234,8 +234,9 @@ export default function MissionCristo({
                 style={{
                   width: "100%",
                   display: "block",
-                  objectFit: "cover",
-                  maxHeight: "320px",
+                  objectFit: "contain",
+                  maxHeight: "420px",
+                  background: "rgba(0,0,0,0.6)",
                 }}
               />
             </div>

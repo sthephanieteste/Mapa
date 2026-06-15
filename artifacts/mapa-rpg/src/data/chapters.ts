@@ -268,6 +268,9 @@ export const CHAPTERS: Record<string, Chapter> = {
       { id: "p2", src: "/assets/fotos/cristo-cornelio/foto2.jpg", caption: "Cornélio Procópio" },
       { id: "p3", src: "/assets/fotos/cristo-cornelio/foto3.jpg", caption: "O momento mais especial" },
       { id: "p4", src: "/fotos/cristo-cornelio/foto4.jpg", caption: "O buquê 🌹" },
+      { id: "p5", src: "/fotos/cristo-cornelio/foto5.jpg", caption: "Juntas ❤️" },
+      { id: "p6", src: "/fotos/cristo-cornelio/foto6.jpg", caption: "Nossa noite ✨" },
+      { id: "p7", src: "/fotos/cristo-cornelio/foto7.jpg", caption: "Nosso momento 💜" },
     ],
     videos: [
       { id: "v1", title: "Nossa memória 🎬", src: "/fotos/cristo-cornelio/video1.mp4", thumbnail: "" },
