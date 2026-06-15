@@ -267,9 +267,11 @@ export const CHAPTERS: Record<string, Chapter> = {
       { id: "p1", src: "/assets/fotos/cristo-cornelio/foto1.jpg", caption: "O dia do pedido ❤️" },
       { id: "p2", src: "/assets/fotos/cristo-cornelio/foto2.jpg", caption: "Cornélio Procópio" },
       { id: "p3", src: "/assets/fotos/cristo-cornelio/foto3.jpg", caption: "O momento mais especial" },
+      { id: "p4", src: "/fotos/cristo-cornelio/foto4.jpg", caption: "O buquê 🌹" },
     ],
     videos: [
-      { id: "v1", title: "O dia que mudou tudo", src: "", thumbnail: "" },
+      { id: "v1", title: "Nossa memória 🎬", src: "/fotos/cristo-cornelio/video1.mp4", thumbnail: "" },
+      { id: "v2", title: "Nossa memória 🎬", src: "/fotos/cristo-cornelio/video2.mp4", thumbnail: "" },
     ],
     story: [
       {
