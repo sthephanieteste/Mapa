@@ -1,20 +1,22 @@
 import { useState } from "react";
 import Avatar from "./Avatar";
 import AchievementsPanel from "./AchievementsPanel";
+import MusicLibrary from "./MusicLibrary";
 import { useProgress } from "@/hooks/useProgress";
+import { useMusicPlayer } from "@/hooks/useMusicPlayer";
 import { CHAPTERS } from "@/data/chapters";
 
-type ConfirmAction =
-  | "resetAll"
-  | { type: "resetChapter"; id: string };
+type ConfirmAction = "resetAll" | { type: "resetChapter"; id: string };
 
 export default function GameHUD() {
   const [showAchievements, setShowAchievements] = useState(false);
   const [showProgress, setShowProgress] = useState(false);
   const [showChapterList, setShowChapterList] = useState(false);
+  const [showMusicLibrary, setShowMusicLibrary] = useState(false);
   const [confirmAction, setConfirmAction] = useState<ConfirmAction | null>(null);
 
   const { completedCount, totalCount, completedChapters, resetAll, resetChapter } = useProgress();
+  const { playing, currentIdx, playlist, toggle, next } = useMusicPlayer();
   const progressPercent = Math.round((completedCount / totalCount) * 100);
 
   function closeMenu() {
@@ -24,9 +26,9 @@ export default function GameHUD() {
 
   return (
     <>
-      {/* ── Solid header bar (48px) — only this intercepts pointer events ── */}
+      {/* ── Solid header bar (48px) ── */}
       <div
-        className="absolute top-0 left-0 right-0 z-40 flex items-center gap-3 px-4"
+        className="absolute top-0 left-0 right-0 z-40 flex items-center gap-2 px-3"
         style={{
           height: "48px",
           background: "rgba(6,3,1,0.96)",
@@ -34,7 +36,7 @@ export default function GameHUD() {
           backdropFilter: "blur(12px)",
         }}
       >
-        {/* Characters */}
+        {/* ── Left: Avatars ── */}
         <div className="flex items-center gap-1 flex-shrink-0">
           <div style={{ borderRadius: "50%", padding: "2px", background: "linear-gradient(135deg,rgba(196,154,60,0.75),rgba(196,154,60,0.15))", boxShadow: "0 0 10px rgba(196,154,60,0.3)" }}>
             <Avatar character={1} size={30} />
@@ -47,7 +49,7 @@ export default function GameHUD() {
 
         <div className="hidden sm:block w-px self-stretch" style={{ background: "rgba(200,140,40,0.18)", marginTop: 8, marginBottom: 8 }} />
 
-        {/* Center: title + progress */}
+        {/* ── Center: title + progress ── */}
         <div className="flex-1 flex items-center gap-3 min-w-0 overflow-hidden">
           <div className="flex items-center gap-1.5 flex-shrink-0">
             <span style={{ color: "rgba(200,140,40,0.45)", fontSize: "8px" }}>✦</span>
@@ -56,9 +58,7 @@ export default function GameHUD() {
             </h1>
             <span style={{ color: "rgba(200,140,40,0.45)", fontSize: "8px" }}>✦</span>
           </div>
-
-          {/* Progress bar — hidden on very small screens */}
-          <div className="hidden sm:flex items-center gap-2 flex-1 max-w-[220px]">
+          <div className="hidden md:flex items-center gap-2 flex-1 max-w-[200px]">
             <span className="flex-shrink-0 text-xs" style={{ color: "#e8c060", fontFamily: "Georgia, serif", fontSize: "10px" }}>{completedCount}/{totalCount}</span>
             <div className="flex-1 relative rounded-full overflow-hidden" style={{ height: "5px", background: "rgba(10,6,2,0.8)", border: "1px solid rgba(200,140,40,0.2)" }}>
               <div style={{ position: "absolute", inset: "0 auto 0 0", borderRadius: "9999px", width: `${progressPercent}%`, background: "linear-gradient(90deg,#c49a3c 0%,#f0d060 50%,#c49a3c 100%)", boxShadow: "0 0 5px rgba(200,160,40,0.6)", transition: "width 0.8s ease", minWidth: completedCount > 0 ? "8px" : "0" }} />
@@ -66,23 +66,73 @@ export default function GameHUD() {
           </div>
         </div>
 
-        {/* Progresso button — top right */}
-        <button
-          onClick={() => { setShowProgress((v) => !v); setShowChapterList(false); }}
-          className="flex-shrink-0 flex items-center gap-1.5 transition-all hover:scale-105"
-          style={{ background: "rgba(200,140,20,0.14)", border: "1px solid rgba(200,140,40,0.32)", borderRadius: "8px", padding: "4px 10px", color: "#e8c060", fontSize: "10px", fontFamily: "Georgia, serif", letterSpacing: "0.05em", cursor: "pointer" }}
-        >
-          ⚙️ <span className="hidden sm:inline">Progresso</span>
-        </button>
+        {/* ── Right: Music controls + Progresso ── */}
+        <div className="flex items-center gap-1.5 flex-shrink-0">
+          {/* Current track name — hidden on small screens */}
+          <div className="hidden lg:flex flex-col items-end max-w-[120px]">
+            <span className="text-xs truncate leading-tight" style={{ color: "rgba(200,160,60,0.7)", fontFamily: "Georgia, serif", fontSize: "9px" }}>
+              {playlist[currentIdx].name}
+            </span>
+            <span className="text-xs truncate leading-tight" style={{ color: "rgba(200,160,60,0.4)", fontFamily: "Georgia, serif", fontSize: "8px" }}>
+              {playlist[currentIdx].artist}
+            </span>
+          </div>
+
+          {/* Play/pause */}
+          <button
+            onClick={toggle}
+            title={playing ? "Pausar" : "Tocar"}
+            className="flex items-center justify-center rounded-full transition-all hover:scale-110"
+            style={{ width: "30px", height: "30px", background: playing ? "rgba(200,140,20,0.2)" : "rgba(30,15,5,0.5)", border: `1px solid ${playing ? "rgba(200,140,40,0.45)" : "rgba(200,140,40,0.18)"}`, fontSize: "13px", cursor: "pointer", backdropFilter: "blur(6px)" }}
+          >
+            {playing ? "⏸" : "▶"}
+          </button>
+
+          {/* Next track */}
+          <button
+            onClick={next}
+            title="Próxima faixa"
+            className="flex items-center justify-center rounded-full transition-all hover:scale-110"
+            style={{ width: "30px", height: "30px", background: "rgba(30,15,5,0.5)", border: "1px solid rgba(200,140,40,0.18)", fontSize: "12px", cursor: "pointer", backdropFilter: "blur(6px)" }}
+          >
+            ⏭
+          </button>
+
+          {/* Open library */}
+          <button
+            onClick={() => setShowMusicLibrary(true)}
+            title="Biblioteca de músicas"
+            className="flex items-center justify-center rounded-full transition-all hover:scale-110"
+            style={{ width: "30px", height: "30px", background: "rgba(30,15,5,0.5)", border: "1px solid rgba(200,140,40,0.18)", fontSize: "13px", cursor: "pointer", backdropFilter: "blur(6px)" }}
+          >
+            🎵
+          </button>
+
+          <div className="w-px self-stretch" style={{ background: "rgba(200,140,40,0.18)", marginTop: 8, marginBottom: 8 }} />
+
+          {/* Progresso */}
+          <button
+            onClick={() => { setShowProgress((v) => !v); setShowChapterList(false); }}
+            className="flex items-center gap-1 transition-all hover:scale-105"
+            style={{ background: "rgba(200,140,20,0.14)", border: "1px solid rgba(200,140,40,0.32)", borderRadius: "8px", padding: "4px 8px", color: "#e8c060", fontSize: "10px", fontFamily: "Georgia, serif", letterSpacing: "0.04em", cursor: "pointer" }}
+          >
+            ⚙️<span className="hidden sm:inline ml-1">Progresso</span>
+          </button>
+        </div>
       </div>
 
       {/* ── Gradient fade below header (pointer-events:none) ── */}
       <div
         className="absolute left-0 right-0 z-30"
-        style={{ top: "48px", height: "40px", background: "linear-gradient(180deg, rgba(6,3,1,0.55) 0%, transparent 100%)", pointerEvents: "none" }}
+        style={{ top: "48px", height: "36px", background: "linear-gradient(180deg, rgba(6,3,1,0.5) 0%, transparent 100%)", pointerEvents: "none" }}
       />
 
-      {/* ── Progress dropdown menu ── */}
+      {/* ── Music Library panel ── */}
+      {showMusicLibrary && (
+        <MusicLibrary onClose={() => setShowMusicLibrary(false)} />
+      )}
+
+      {/* ── Progress dropdown ── */}
       {showProgress && (
         <div className="fixed inset-0 z-50" onClick={closeMenu}>
           <div
@@ -92,7 +142,6 @@ export default function GameHUD() {
           >
             <p className="text-xs font-bold tracking-widest mb-3" style={{ color: "#f0d888", fontFamily: "Georgia, serif", letterSpacing: "0.14em" }}>PROGRESSO</p>
 
-            {/* Ver Conquistas */}
             <button
               onClick={() => { closeMenu(); setShowAchievements(true); }}
               className="w-full text-left px-3 py-2.5 rounded-lg mb-0.5 transition-all hover:bg-white/5"
@@ -103,7 +152,6 @@ export default function GameHUD() {
 
             <div style={{ height: "1px", background: "rgba(200,140,40,0.14)", margin: "6px 0" }} />
 
-            {/* Reiniciar Capítulo */}
             <button
               onClick={() => setShowChapterList((v) => !v)}
               className="w-full text-left px-3 py-2.5 rounded-lg mb-0.5 transition-all hover:bg-white/5 flex items-center justify-between"
@@ -140,7 +188,6 @@ export default function GameHUD() {
 
             <div style={{ height: "1px", background: "rgba(200,140,40,0.14)", margin: "6px 0" }} />
 
-            {/* Reiniciar Tudo */}
             <button
               onClick={() => { setConfirmAction("resetAll"); closeMenu(); }}
               className="w-full text-left px-3 py-2.5 rounded-lg transition-all hover:bg-red-900/20"
@@ -178,11 +225,8 @@ export default function GameHUD() {
             <div className="flex gap-3">
               <button
                 onClick={() => {
-                  if (confirmAction === "resetAll") {
-                    resetAll();
-                  } else {
-                    resetChapter((confirmAction as { type: string; id: string }).id);
-                  }
+                  if (confirmAction === "resetAll") { resetAll(); }
+                  else { resetChapter((confirmAction as { type: string; id: string }).id); }
                   setConfirmAction(null);
                 }}
                 className="flex-1 py-2.5 rounded-full text-sm transition-all hover:scale-105"
