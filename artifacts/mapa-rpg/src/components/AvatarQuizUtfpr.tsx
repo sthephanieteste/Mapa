@@ -228,7 +228,7 @@ export default function AvatarQuizUtfpr({
                     fontFamily: "Georgia, serif", fontSize: "11px", textAlign: "center",
                     color: `${chapterColor}99`, marginTop: "6px", letterSpacing: "0.06em",
                   }}>
-                    ???
+                    mozinho
                   </p>
                 </button>
               </div>
@@ -264,7 +264,7 @@ export default function AvatarQuizUtfpr({
                     fontFamily: "Georgia, serif", fontSize: "11px", textAlign: "center",
                     color: "rgba(220,120,120,0.6)", marginTop: "6px", letterSpacing: "0.06em",
                   }}>
-                    ???
+                    vidoca
                   </p>
                 </button>
               </div>

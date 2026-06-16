@@ -283,7 +283,7 @@ export default function AvatarQuizViagem({
                     color: victory ? chapterColor : chapterColor + "99", marginTop: "6px", letterSpacing: "0.06em",
                     animation: victory ? "fadeIn 0.4s ease" : undefined,
                   }}>
-                    {victory ? "✓ Correto!" : "???"}
+                    {victory ? "✓ Correto!" : "mozinho"}
                   </p>
                 </button>
               </div>
@@ -319,7 +319,7 @@ export default function AvatarQuizViagem({
                     fontFamily: "Georgia, serif", fontSize: "11px", textAlign: "center",
                     color: "rgba(220,120,120,0.6)", marginTop: "6px", letterSpacing: "0.06em",
                   }}>
-                    ???
+                    vidoca
                   </p>
                 </button>
               </div>

@@ -121,7 +121,7 @@ function WrongAvatar({
           fontFamily: "Georgia, serif", fontSize: "11px", textAlign: "center",
           color: "rgba(220,120,120,0.6)", marginTop: "6px", letterSpacing: "0.06em",
         }}>
-          ???
+          vidoca
         </p>
       </button>
     </div>
@@ -181,7 +181,7 @@ function CorrectAvatar({
           color: victory ? color : color + "99", marginTop: "6px", letterSpacing: "0.06em",
           animation: victory ? "fadeIn 0.4s ease" : undefined,
         }}>
-          {victory ? "✓ Correto!" : "???"}
+          {victory ? "✓ Correto!" : "mozinho"}
         </p>
       </button>
     </div>
