@@ -145,44 +145,89 @@ export default function MapMarkerComponent({ marker }: Props) {
         {hovered && !transitioning && (
           <div
             className="absolute bottom-full left-1/2 mb-3 pointer-events-none"
-            style={{ transform: "translateX(-50%)", width: featured ? "220px" : "190px", animation: "fadeInUp 0.15s ease", zIndex: 40 }}
+            style={{ transform: "translateX(-50%)", width: "clamp(200px, 22vw, 280px)", animation: "fadeInUp 0.15s ease", zIndex: 40 }}
           >
             <div
-              className="rounded-xl px-3 py-2.5 text-center"
+              className="rounded-xl text-center"
               style={{
-                background: "rgba(10, 6, 2, 0.95)",
-                border: `1px solid ${unlocked ? marker.color + "70" : "rgba(120,90,30,0.4)"}`,
-                boxShadow: featured && unlocked ? `0 4px 28px ${marker.color}30` : "0 4px 24px rgba(0,0,0,0.6)",
-                backdropFilter: "blur(10px)",
+                padding: "clamp(10px, 1.2vw, 16px) clamp(12px, 1.5vw, 20px)",
+                background: "rgba(6, 3, 1, 0.97)",
+                border: `1.5px solid ${unlocked ? marker.color + "80" : "rgba(120,90,30,0.4)"}`,
+                boxShadow: featured && unlocked
+                  ? `0 6px 32px ${marker.color}40, 0 2px 12px rgba(0,0,0,0.8)`
+                  : "0 6px 28px rgba(0,0,0,0.75)",
+                backdropFilter: "blur(12px)",
               }}
             >
               {unlocked ? (
                 <>
-                  <p className="text-xs font-bold mb-0.5 leading-tight" style={{ color: marker.color, fontFamily: "Georgia, serif", fontSize: featured ? "13px" : "11px" }}>
-                    {completed && <span style={{ marginRight: 4 }}>✅</span>}
+                  <p
+                    className="font-bold leading-tight"
+                    style={{
+                      color: marker.color,
+                      fontFamily: "Georgia, serif",
+                      fontSize: "clamp(15px, 1.4vw, 18px)",
+                      textShadow: `0 0 16px ${marker.color}60, 0 1px 4px rgba(0,0,0,0.9)`,
+                      marginBottom: "5px",
+                    }}
+                  >
+                    {completed && <span style={{ marginRight: 5 }}>✅</span>}
                     {marker.label}
                   </p>
-                  <p className="text-xs leading-snug" style={{ color: "rgba(230,210,160,0.8)", fontFamily: "Georgia, serif" }}>
+                  <p
+                    className="leading-snug"
+                    style={{
+                      color: "rgba(240,220,170,0.92)",
+                      fontFamily: "Georgia, serif",
+                      fontSize: "clamp(12px, 1.1vw, 14px)",
+                      textShadow: "0 1px 4px rgba(0,0,0,0.9)",
+                    }}
+                  >
                     {marker.shortDesc}
                   </p>
                   {featured && (
-                    <p className="text-xs mt-1" style={{ color: `${marker.color}90`, fontFamily: "Georgia, serif", fontSize: "10px", letterSpacing: "0.06em" }}>
+                    <p
+                      style={{
+                        color: `${marker.color}aa`,
+                        fontFamily: "Georgia, serif",
+                        fontSize: "clamp(10px, 0.9vw, 12px)",
+                        letterSpacing: "0.08em",
+                        marginTop: "6px",
+                        textShadow: `0 0 8px ${marker.color}40`,
+                      }}
+                    >
                       ✦ O momento mais especial ✦
                     </p>
                   )}
                 </>
               ) : (
                 <>
-                  <p className="text-xs font-bold mb-0.5" style={{ color: "rgba(160,120,50,0.7)", fontFamily: "Georgia, serif" }}>
+                  <p
+                    className="font-bold"
+                    style={{
+                      color: "rgba(180,140,60,0.8)",
+                      fontFamily: "Georgia, serif",
+                      fontSize: "clamp(14px, 1.3vw, 16px)",
+                      marginBottom: "4px",
+                      textShadow: "0 1px 4px rgba(0,0,0,0.9)",
+                    }}
+                  >
                     🔒 Bloqueado
                   </p>
-                  <p className="text-xs" style={{ color: "rgba(160,120,50,0.5)", fontFamily: "Georgia, serif" }}>
+                  <p
+                    style={{
+                      color: "rgba(180,140,60,0.6)",
+                      fontFamily: "Georgia, serif",
+                      fontSize: "clamp(11px, 1vw, 13px)",
+                      textShadow: "0 1px 3px rgba(0,0,0,0.8)",
+                    }}
+                  >
                     Conclua o capítulo anterior para desbloquear.
                   </p>
                 </>
               )}
             </div>
-            <div className="mx-auto w-0 h-0" style={{ borderLeft: "6px solid transparent", borderRight: "6px solid transparent", borderTop: `6px solid ${unlocked ? marker.color + "70" : "rgba(120,90,30,0.4)"}` }} />
+            <div className="mx-auto w-0 h-0" style={{ borderLeft: "7px solid transparent", borderRight: "7px solid transparent", borderTop: `7px solid ${unlocked ? marker.color + "80" : "rgba(120,90,30,0.4)"}` }} />
           </div>
         )}
 
