@@ -69,9 +69,9 @@ function Lightbox({
   onNext: () => void;
 }) {
   const photo = photos[currentIdx];
-  if (!photo) return null;
 
   useEffect(() => {
+    if (!photo) return;
     function handleKey(e: KeyboardEvent) {
       if (e.key === "Escape") onClose();
       if (e.key === "ArrowLeft") onPrev();
@@ -79,7 +79,9 @@ function Lightbox({
     }
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [onClose, onPrev, onNext]);
+  }, [photo, onClose, onPrev, onNext]);
+
+  if (!photo) return null;
 
   return (
     <div
