@@ -31,10 +31,10 @@ function App() {
       <TooltipProvider>
         <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
           <Router />
+          <AlbumCelebration />
         </WouterRouter>
         <MusicPlayer />
         <SettingsSidebar />
-        <AlbumCelebration />
         <Toaster />
       </TooltipProvider>
     </QueryClientProvider>
