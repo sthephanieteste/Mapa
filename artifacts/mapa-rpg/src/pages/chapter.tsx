@@ -64,7 +64,7 @@ function ChapterVideo({ src }: { src: string }) {
       className="w-full aspect-video"
       src={src}
       style={{ display: "block" }}
-      onPlay={() => { musicControls.clearVideoState(); musicControls.pauseForVideo(); }}
+      onPlay={() => { musicControls.pauseForVideo(); }}
       onPause={() => musicControls.resumeFromVideo()}
       onEnded={() => musicControls.resumeFromVideo()}
     />

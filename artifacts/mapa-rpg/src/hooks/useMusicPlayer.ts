@@ -166,7 +166,8 @@ export const musicControls = {
     audio.src = FUTURO_TRACK.src;
     audio.currentTime = 0;
     audio.volume = 0;
-    audio.onended = null;               // doesn't auto-advance playlist
+    // When Chuva de Arroz ends, smoothly return to the main playlist
+    audio.onended = () => { _playTrackInternal(0, true); };
     _isPlaying = true;
     _fadeIn(audio);
     _notify();

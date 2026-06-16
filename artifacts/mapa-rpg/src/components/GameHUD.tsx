@@ -1,15 +1,18 @@
 import { useState } from "react";
+import { useLocation } from "wouter";
 import Avatar from "./Avatar";
 import AchievementsPanel from "./AchievementsPanel";
 import MusicLibrary from "./MusicLibrary";
 import { useProgress } from "@/hooks/useProgress";
 import { useMusicPlayer } from "@/hooks/useMusicPlayer";
 import { CHAPTERS } from "@/data/chapters";
+import { CHAPTER_ORDER } from "@/data/progression";
 import { openFinalScroll, toggleFinalScroll } from "@/components/SecretEnding";
 
 type ConfirmAction = "resetAll" | { type: "resetChapter"; id: string };
 
 export default function GameHUD() {
+  const [, navigate] = useLocation();
   const [showAchievements, setShowAchievements] = useState(false);
   const [showProgress, setShowProgress] = useState(false);
   const [showChapterList, setShowChapterList] = useState(false);
@@ -17,6 +20,7 @@ export default function GameHUD() {
   const [confirmAction, setConfirmAction] = useState<ConfirmAction | null>(null);
 
   const { completedCount, totalCount, completedChapters, resetAll, resetChapter, endingUnlocked } = useProgress();
+  const albumUnlocked = completedChapters.length >= CHAPTER_ORDER.length;
   const { playing, currentIdx, playlist, toggle, next } = useMusicPlayer();
   const progressPercent = Math.round((completedCount / totalCount) * 100);
 
@@ -166,6 +170,16 @@ export default function GameHUD() {
                 style={{ color: "rgba(240,210,120,0.95)", fontFamily: "Georgia, serif", fontSize: "13px", textShadow: "0 0 8px rgba(200,150,40,0.4)" }}
               >
                 📜 Pergaminho Final
+              </button>
+            )}
+
+            {albumUnlocked && (
+              <button
+                onClick={() => { closeMenu(); navigate("/album"); }}
+                className="w-full text-left px-3 py-2.5 rounded-lg mb-0.5 transition-all hover:bg-white/5"
+                style={{ color: "rgba(240,210,120,0.95)", fontFamily: "Georgia, serif", fontSize: "13px", textShadow: "0 0 8px rgba(200,150,40,0.4)" }}
+              >
+                📸 Álbum
               </button>
             )}
 

@@ -109,7 +109,7 @@ export default function WelcomePage() {
           }}
         >
           {/* Char 1 */}
-          <div className="flex flex-col items-center" style={{ gap: 0 }}>
+          <div className="flex flex-col items-center" style={{ gap: 6 }}>
             <div
               style={{
                 borderRadius: "50%",
@@ -125,6 +125,18 @@ export default function WelcomePage() {
                 style={{ display: "block" }}
               />
             </div>
+            <span
+              style={{
+                fontFamily: "Georgia, serif",
+                fontSize: "clamp(10px, 1.2vw, 13px)",
+                color: "rgba(196,154,60,0.75)",
+                letterSpacing: "0.12em",
+                opacity: phase === "ready" ? 1 : 0,
+                transition: "opacity 0.6s ease 0.5s",
+              }}
+            >
+              mozinho
+            </span>
           </div>
 
           {/* Heart between characters */}
@@ -149,7 +161,7 @@ export default function WelcomePage() {
           </div>
 
           {/* Char 2 */}
-          <div className="flex flex-col items-center" style={{ gap: 0 }}>
+          <div className="flex flex-col items-center" style={{ gap: 6 }}>
             <div
               style={{
                 borderRadius: "50%",
@@ -165,6 +177,18 @@ export default function WelcomePage() {
                 style={{ display: "block" }}
               />
             </div>
+            <span
+              style={{
+                fontFamily: "Georgia, serif",
+                fontSize: "clamp(10px, 1.2vw, 13px)",
+                color: "rgba(232,64,64,0.75)",
+                letterSpacing: "0.12em",
+                opacity: phase === "ready" ? 1 : 0,
+                transition: "opacity 0.6s ease 0.5s",
+              }}
+            >
+              vidoca
+            </span>
           </div>
         </div>
 

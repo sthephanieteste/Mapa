@@ -6,6 +6,7 @@ import WelcomePage from "@/pages/welcome";
 import MapPage from "@/pages/map";
 import ChapterPage from "@/pages/chapter";
 import AdminPage from "@/pages/admin";
+import AlbumPage from "@/pages/album";
 import MusicPlayer from "@/components/MusicPlayer";
 import SettingsSidebar from "@/components/SettingsSidebar";
 
@@ -18,6 +19,7 @@ function Router() {
       <Route path="/map" component={MapPage} />
       <Route path="/chapter/:id" component={ChapterPage} />
       <Route path="/admin" component={AdminPage} />
+      <Route path="/album" component={AlbumPage} />
     </Switch>
   );
 }
