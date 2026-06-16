@@ -157,14 +157,17 @@ export function useMapControls() {
     };
   }, [commit]);
 
+  const pointerIdRef = useRef<number | null>(null);
+
   const onPointerDown = useCallback((e: React.PointerEvent) => {
     if (e.pointerType === "touch") return;
     isDragging.current = true;
     dragMoved.current = false;
     pointerStart.current = { x: e.clientX, y: e.clientY };
     offsetAtStart.current = { ...offsetRef.current };
-    setDragging(true);
-    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+    pointerIdRef.current = e.pointerId;
+    // Do NOT setPointerCapture yet — wait until drag threshold is exceeded
+    // so that simple clicks on markers still fire normally.
   }, []);
 
   const onPointerMove = useCallback((e: React.PointerEvent) => {
@@ -173,7 +176,14 @@ export function useMapControls() {
     const dx = e.clientX - pointerStart.current.x;
     const dy = e.clientY - pointerStart.current.y;
     if (Math.abs(dx) > DRAG_THRESHOLD || Math.abs(dy) > DRAG_THRESHOLD) {
-      dragMoved.current = true;
+      if (!dragMoved.current) {
+        dragMoved.current = true;
+        setDragging(true);
+        // Capture pointer only once drag starts — keeps clicks on markers working
+        try {
+          (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+        } catch (_) { /* ignore */ }
+      }
     }
     if (!dragMoved.current) return;
     const clamped = clampOffset(
