@@ -9,6 +9,7 @@ import AdminPage from "@/pages/admin";
 import AlbumPage from "@/pages/album";
 import MusicPlayer from "@/components/MusicPlayer";
 import SettingsSidebar from "@/components/SettingsSidebar";
+import AlbumCelebration from "@/components/AlbumCelebration";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +34,7 @@ function App() {
         </WouterRouter>
         <MusicPlayer />
         <SettingsSidebar />
+        <AlbumCelebration />
         <Toaster />
       </TooltipProvider>
     </QueryClientProvider>
