@@ -10,6 +10,14 @@ export function openFinalScroll() {
   window.dispatchEvent(new CustomEvent("open-final-scroll"));
 }
 
+export function closeFinalScroll() {
+  window.dispatchEvent(new CustomEvent("close-final-scroll"));
+}
+
+export function toggleFinalScroll() {
+  window.dispatchEvent(new CustomEvent("toggle-final-scroll"));
+}
+
 type Phase =
   | "idle"
   | "awakening"
@@ -102,14 +110,25 @@ export default function SecretEnding() {
     return () => timers.current.forEach(clearTimeout);
   }, [allComplete, buildFragments]);
 
-  // Listen for "open from HUD" event
+  // Listen for open / close / toggle events from HUD
   useEffect(() => {
-    const handler = () => {
-      setFragments(buildFragments());
-      setPhase("reading");
+    const openHandler = () => { setFragments(buildFragments()); setPhase("reading"); };
+    const closeHandler = () => setPhase("idle");
+    const toggleHandler = () => {
+      setPhase((prev) => {
+        if (prev === "reading") return "idle";
+        setFragments(buildFragments());
+        return "reading";
+      });
     };
-    window.addEventListener("open-final-scroll", handler);
-    return () => window.removeEventListener("open-final-scroll", handler);
+    window.addEventListener("open-final-scroll", openHandler);
+    window.addEventListener("close-final-scroll", closeHandler);
+    window.addEventListener("toggle-final-scroll", toggleHandler);
+    return () => {
+      window.removeEventListener("open-final-scroll", openHandler);
+      window.removeEventListener("close-final-scroll", closeHandler);
+      window.removeEventListener("toggle-final-scroll", toggleHandler);
+    };
   }, [buildFragments]);
 
   const handleOpenScroll = useCallback(() => {
@@ -405,8 +424,8 @@ export default function SecretEnding() {
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 transition={{ duration: 0.7, ease: "easeOut" }}
                 style={{
-                  width: "min(92vw, 580px)",
-                  maxHeight: "calc(100dvh - 32px)",
+                  width: "min(88vw, 500px)",
+                  maxHeight: "min(88dvh, 560px)",
                   display: "flex",
                   flexDirection: "column",
                 }}
@@ -414,15 +433,16 @@ export default function SecretEnding() {
                 {/* Scroll rod top */}
                 <ScrollRod />
 
-                {/* Parchment body */}
+                {/* Parchment body — outer wrapper does NOT scroll */}
                 <div
                   style={{
                     flex: 1,
-                    overflowY: "auto",
+                    overflow: "hidden",
                     background: "linear-gradient(180deg, #f5e6c0 0%, #ead5a0 50%, #f0dfa8 100%)",
-                    padding: "20px 28px 32px",
                     boxShadow: "inset 0 0 40px rgba(160,100,20,0.15), 0 8px 40px rgba(0,0,0,0.6)",
                     position: "relative",
+                    display: "flex",
+                    flexDirection: "column",
                   }}
                 >
                   {/* Aged paper texture */}
@@ -433,109 +453,121 @@ export default function SecretEnding() {
                       backgroundImage:
                         "radial-gradient(ellipse at 20% 30%, rgba(160,100,20,0.07) 0%, transparent 60%), radial-gradient(ellipse at 80% 70%, rgba(120,80,10,0.08) 0%, transparent 60%)",
                       pointerEvents: "none",
+                      zIndex: 0,
                     }}
                   />
 
-                  {/* Close button — top-right inside parchment, always visible */}
-                  <button
-                    onClick={handleClose}
-                    title="Fechar pergaminho"
+                  {/* ── Non-scrolling header row with close button ── */}
+                  <div
                     style={{
-                      position: "absolute",
-                      top: 12,
-                      right: 12,
-                      width: 30,
-                      height: 30,
-                      borderRadius: "50%",
-                      background: "rgba(90,50,10,0.12)",
-                      border: "1px solid rgba(90,53,10,0.35)",
-                      color: "#7a4a18",
-                      fontSize: "15px",
-                      cursor: "pointer",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
+                      position: "relative",
                       zIndex: 10,
-                      lineHeight: 1,
+                      flexShrink: 0,
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      padding: "10px 10px 0",
                     }}
                   >
-                    ✕
-                  </button>
-
-                  {/* Title */}
-                  <motion.div
-                    initial={{ opacity: 0, y: -8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2, duration: 0.6 }}
-                    style={{ textAlign: "center", marginBottom: "24px", paddingTop: "8px" }}
-                  >
-                    <p
+                    <button
+                      onClick={handleClose}
+                      title="Fechar pergaminho"
                       style={{
-                        fontFamily: "Georgia, serif",
-                        fontSize: "clamp(18px, 3vw, 24px)",
-                        fontWeight: "bold",
-                        color: "#5a3510",
-                        letterSpacing: "0.06em",
-                        marginBottom: "4px",
-                      }}
-                    >
-                      O Último Capítulo
-                    </p>
-                    <div
-                      style={{
-                        width: "60%",
-                        height: "1px",
-                        margin: "0 auto",
-                        background: "linear-gradient(90deg, transparent, rgba(140,90,20,0.5), transparent)",
-                      }}
-                    />
-                  </motion.div>
-
-                  {/* Letter body */}
-                  <div style={{ position: "relative", zIndex: 1 }}>
-                    {LETTER_PARAGRAPHS.map((para, i) => (
-                      <motion.p
-                        key={i}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.3 + i * 0.06, duration: 0.5 }}
-                        style={{
-                          fontFamily: "Georgia, serif",
-                          fontSize: "clamp(12px, 1.8vw, 14.5px)",
-                          color: "#3d2008",
-                          lineHeight: 1.85,
-                          marginBottom: "14px",
-                          whiteSpace: "pre-line",
-                        }}
-                      >
-                        {para}
-                      </motion.p>
-                    ))}
-                  </div>
-
-                  {/* Wax seal */}
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 1.8, duration: 0.5, type: "spring", stiffness: 200 }}
-                    style={{ textAlign: "center", marginTop: "8px", paddingBottom: "8px" }}
-                  >
-                    <div
-                      style={{
-                        display: "inline-flex",
+                        width: 32,
+                        height: 32,
+                        borderRadius: "50%",
+                        background: "rgba(90,50,10,0.15)",
+                        border: "1px solid rgba(90,53,10,0.4)",
+                        color: "#7a4a18",
+                        fontSize: "16px",
+                        cursor: "pointer",
+                        display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        width: 52,
-                        height: 52,
-                        borderRadius: "50%",
-                        background: "radial-gradient(circle, #c0392b, #922b21)",
-                        boxShadow: "0 3px 12px rgba(180,40,20,0.5), inset 0 1px 4px rgba(255,255,255,0.2)",
-                        fontSize: "22px",
+                        lineHeight: 1,
+                        fontWeight: "bold",
                       }}
                     >
-                      ❤️
+                      ✕
+                    </button>
+                  </div>
+
+                  {/* ── Scrollable letter content ── */}
+                  <div style={{ flex: 1, overflowY: "auto", padding: "0 28px 32px", position: "relative", zIndex: 1 }}>
+                    {/* Title */}
+                    <motion.div
+                      initial={{ opacity: 0, y: -8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.2, duration: 0.6 }}
+                      style={{ textAlign: "center", marginBottom: "20px", paddingTop: "4px" }}
+                    >
+                      <p
+                        style={{
+                          fontFamily: "Georgia, serif",
+                          fontSize: "clamp(16px, 3vw, 22px)",
+                          fontWeight: "bold",
+                          color: "#5a3510",
+                          letterSpacing: "0.06em",
+                          marginBottom: "4px",
+                        }}
+                      >
+                        O Último Capítulo
+                      </p>
+                      <div
+                        style={{
+                          width: "60%",
+                          height: "1px",
+                          margin: "0 auto",
+                          background: "linear-gradient(90deg, transparent, rgba(140,90,20,0.5), transparent)",
+                        }}
+                      />
+                    </motion.div>
+
+                    {/* Letter body */}
+                    <div>
+                      {LETTER_PARAGRAPHS.map((para, i) => (
+                        <motion.p
+                          key={i}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: 0.3 + i * 0.06, duration: 0.5 }}
+                          style={{
+                            fontFamily: "Georgia, serif",
+                            fontSize: "clamp(12px, 1.8vw, 14px)",
+                            color: "#3d2008",
+                            lineHeight: 1.8,
+                            marginBottom: "12px",
+                            whiteSpace: "pre-line",
+                          }}
+                        >
+                          {para}
+                        </motion.p>
+                      ))}
                     </div>
-                  </motion.div>
+
+                    {/* Wax seal */}
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 1.8, duration: 0.5, type: "spring", stiffness: 200 }}
+                      style={{ textAlign: "center", marginTop: "8px", paddingBottom: "8px" }}
+                    >
+                      <div
+                        style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          width: 48,
+                          height: 48,
+                          borderRadius: "50%",
+                          background: "radial-gradient(circle, #c0392b, #922b21)",
+                          boxShadow: "0 3px 12px rgba(180,40,20,0.5), inset 0 1px 4px rgba(255,255,255,0.2)",
+                          fontSize: "20px",
+                        }}
+                      >
+                        ❤️
+                      </div>
+                    </motion.div>
+                  </div>
                 </div>
 
                 {/* Scroll rod bottom */}

@@ -64,7 +64,7 @@ function ChapterVideo({ src }: { src: string }) {
       className="w-full aspect-video"
       src={src}
       style={{ display: "block" }}
-      onPlay={() => musicControls.pauseForVideo()}
+      onPlay={() => { musicControls.clearVideoState(); musicControls.pauseForVideo(); }}
       onPause={() => musicControls.resumeFromVideo()}
       onEnded={() => musicControls.resumeFromVideo()}
     />
@@ -99,11 +99,15 @@ export default function ChapterPage() {
   const [showSmoke, setShowSmoke] = useState<"in" | "out" | null>(null);
 
   // Play Chuva de Arroz exclusively when O Futuro chapter opens
+  // Also clear any stale video-pause state when leaving the page
   const chapterId = params.id ?? "";
   useEffect(() => {
     if (chapterId === "o-futuro") {
       musicControls.playFuturoTrack();
     }
+    return () => {
+      musicControls.clearVideoState();
+    };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chapterId]);
   const [showSuccess, setShowSuccess] = useState(false);

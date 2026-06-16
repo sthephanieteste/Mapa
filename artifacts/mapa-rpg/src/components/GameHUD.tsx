@@ -5,7 +5,7 @@ import MusicLibrary from "./MusicLibrary";
 import { useProgress } from "@/hooks/useProgress";
 import { useMusicPlayer } from "@/hooks/useMusicPlayer";
 import { CHAPTERS } from "@/data/chapters";
-import { openFinalScroll } from "@/components/SecretEnding";
+import { openFinalScroll, toggleFinalScroll } from "@/components/SecretEnding";
 
 type ConfirmAction = "resetAll" | { type: "resetChapter"; id: string };
 
@@ -42,7 +42,15 @@ export default function GameHUD() {
           <div style={{ borderRadius: "50%", padding: "2px", background: "linear-gradient(135deg,rgba(196,154,60,0.75),rgba(196,154,60,0.15))", boxShadow: "0 0 10px rgba(196,154,60,0.3)" }}>
             <Avatar character={1} size={30} />
           </div>
-          <span style={{ fontSize: "9px", filter: "drop-shadow(0 0 4px rgba(232,64,64,0.7))", animation: "pulse-heart 1.8s ease-in-out infinite", lineHeight: 1 }}>❤️</span>
+          {endingUnlocked ? (
+            <button
+              onClick={toggleFinalScroll}
+              title="Abrir / fechar pergaminho"
+              style={{ background: "none", border: "none", cursor: "pointer", padding: "2px 1px", lineHeight: 1, fontSize: "9px", filter: "drop-shadow(0 0 4px rgba(232,64,64,0.7))", animation: "pulse-heart 1.8s ease-in-out infinite" }}
+            >❤️</button>
+          ) : (
+            <span style={{ fontSize: "9px", filter: "drop-shadow(0 0 4px rgba(232,64,64,0.7))", animation: "pulse-heart 1.8s ease-in-out infinite", lineHeight: 1 }}>❤️</span>
+          )}
           <div style={{ borderRadius: "50%", padding: "2px", background: "linear-gradient(135deg,rgba(232,64,64,0.75),rgba(232,64,64,0.15))", boxShadow: "0 0 10px rgba(232,64,64,0.25)" }}>
             <Avatar character={2} size={30} />
           </div>

@@ -82,18 +82,20 @@ export default function MapMarkerComponent({ marker }: Props) {
           <>
             <div style={{
               position: "absolute",
+              top: "50%", left: "50%",
+              transform: "translate(-50%, -50%) scale(2.8)",
               width: `${baseSize}px`, height: `${baseSize}px`,
               borderRadius: "50%",
-              transform: "scale(2.8)",
               background: `radial-gradient(circle, ${marker.color}18 0%, transparent 70%)`,
               animation: "ping 3s cubic-bezier(0,0,0.2,1) infinite",
               pointerEvents: "none",
             }} />
             <div style={{
               position: "absolute",
+              top: "50%", left: "50%",
+              transform: "translate(-50%, -50%) scale(2.0)",
               width: `${baseSize}px`, height: `${baseSize}px`,
               borderRadius: "50%",
-              transform: "scale(2.0)",
               background: `radial-gradient(circle, ${marker.color}22 0%, transparent 65%)`,
               animation: "ping 3s cubic-bezier(0,0,0.2,1) 0.8s infinite",
               pointerEvents: "none",
@@ -106,6 +108,8 @@ export default function MapMarkerComponent({ marker }: Props) {
           <div
             style={{
               position: "absolute",
+              top: "50%", left: "50%",
+              transform: "translate(-50%, -50%)",
               width: `${currentSize}px`,
               height: `${currentSize}px`,
               borderRadius: "50%",
@@ -123,6 +127,8 @@ export default function MapMarkerComponent({ marker }: Props) {
           <div
             style={{
               position: "absolute",
+              top: "50%", left: "50%",
+              transform: "translate(-50%, -50%)",
               width: `${currentSize}px`,
               height: `${currentSize}px`,
               borderRadius: "50%",

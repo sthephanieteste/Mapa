@@ -67,6 +67,16 @@ function _clearFade() {
   if (_fadeTimer !== null) { clearInterval(_fadeTimer); _fadeTimer = null; }
 }
 
+/** Immediately stop all playback and reset volume to zero. */
+function _hardStop() {
+  _clearFade();
+  if (_audioEl) {
+    _audioEl.pause();
+    _audioEl.volume = 0;
+  }
+  _pausedForVideo = false;
+}
+
 function _fadeIn(audio: HTMLAudioElement) {
   _clearFade();
   audio.play().catch(() => {});
@@ -94,10 +104,9 @@ function _wireEnded() {
 }
 
 function _playTrackInternal(idx: number, autoplay: boolean) {
+  _hardStop();                          // always fully stop first
   _currentIdx = idx;
   const audio = _getAudio();
-  _clearFade();
-  audio.pause();
   audio.src = PLAYLIST[idx].src;
   audio.currentTime = 0;
   audio.volume = 0;
@@ -134,7 +143,7 @@ export const musicControls = {
     const audio = _getAudio();
     if (_isPlaying) {
       _fadeOut(audio, () => { _isPlaying = false; _saveState(audio.currentTime); _notify(); });
-      _isPlaying = false; // optimistic UI
+      _isPlaying = false;
     } else {
       _isPlaying = true;
       _fadeIn(audio);
@@ -150,31 +159,42 @@ export const musicControls = {
     _playTrackInternal(idx, true);
   },
 
+  /** Play the special O Futuro track, replacing whatever is currently playing. */
   playFuturoTrack() {
+    _hardStop();
     const audio = _getAudio();
-    _clearFade();
-    audio.pause();
     audio.src = FUTURO_TRACK.src;
     audio.currentTime = 0;
     audio.volume = 0;
-    audio.onended = null;
+    audio.onended = null;               // doesn't auto-advance playlist
     _isPlaying = true;
     _fadeIn(audio);
     _notify();
   },
 
+  /** Call when a video starts playing — fades out music. */
   pauseForVideo() {
-    if (!_isPlaying) return;
+    if (_pausedForVideo) return;        // already paused for video
     _pausedForVideo = true;
-    const audio = _getAudio();
-    _fadeOut(audio, () => {});
+    if (_isPlaying) {
+      _fadeOut(_getAudio(), () => {});
+    }
   },
 
+  /** Call when a video stops/pauses/ends — restores music. */
   resumeFromVideo() {
     if (!_pausedForVideo) return;
     _pausedForVideo = false;
     if (_isPlaying) {
       _fadeIn(_getAudio());
+    }
+  },
+
+  /** Force-clear the video-pause flag (call on chapter unmount). */
+  clearVideoState() {
+    if (_pausedForVideo) {
+      _pausedForVideo = false;
+      if (_isPlaying) _fadeIn(_getAudio());
     }
   },
 
