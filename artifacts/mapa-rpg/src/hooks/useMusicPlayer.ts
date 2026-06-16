@@ -11,9 +11,14 @@ const BASE = import.meta.env.BASE_URL;
 export const PLAYLIST: Track[] = [
   { src: `${BASE}nossa-musica.mp3`,      name: "Aliança",             artist: "Kalvert Richard" },
   { src: `${BASE}musica-ainda-bem.mp3`,  name: "Ainda Bem",           artist: "Marisa Monte" },
-  { src: `${BASE}musica-lisboa.mp3`,     name: "Lisboa",              artist: "AnaVitória & Lenine" },
   { src: `${BASE}musica-thinking.mp3`,   name: "Thinking Out Loud",   artist: "Daniel Jang" },
 ];
+
+export const FUTURO_TRACK: Track = {
+  src: `${BASE}chuva-de-arroz.mp3`,
+  name: "Chuva de Arroz",
+  artist: "Luan Santana",
+};
 
 const INITIAL_VOLUME = 0.2;
 const FADE_STEPS = 40;
@@ -143,6 +148,19 @@ export const musicControls = {
 
   playTrack(idx: number) {
     _playTrackInternal(idx, true);
+  },
+
+  playFuturoTrack() {
+    const audio = _getAudio();
+    _clearFade();
+    audio.pause();
+    audio.src = FUTURO_TRACK.src;
+    audio.currentTime = 0;
+    audio.volume = 0;
+    audio.onended = null;
+    _isPlaying = true;
+    _fadeIn(audio);
+    _notify();
   },
 
   pauseForVideo() {

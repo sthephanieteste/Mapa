@@ -20,6 +20,7 @@ export default function MapMarkerComponent({ marker }: Props) {
 
   const baseSize = featured ? 60 : 44;
   const hoverSize = featured ? 72 : 52;
+  const currentSize = hovered && unlocked ? hoverSize : baseSize;
   const iconSize = featured ? (hovered && unlocked ? 32 : 26) : (hovered && unlocked ? 22 : 18);
 
   const handleClick = () => {
@@ -59,7 +60,7 @@ export default function MapMarkerComponent({ marker }: Props) {
         </div>
       )}
 
-      {/* ── Marker ── */}
+      {/* ── Marker wrapper ── */}
       <div
         className="absolute"
         style={{
@@ -67,25 +68,32 @@ export default function MapMarkerComponent({ marker }: Props) {
           left: marker.left,
           transform: "translate(-50%, -50%)",
           zIndex: hovered ? 30 : (featured ? 25 : 20),
+          width: `${hoverSize}px`,
+          height: `${hoverSize}px`,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
-        {/* Featured: ambient glow rays behind marker */}
+        {/* ── Ambient glow rays (featured, before completion) ── */}
         {featured && unlocked && !completed && (
           <>
-            {/* Slow outer beacon */}
             <div style={{
-              position: "absolute", inset: 0, borderRadius: "50%",
-              transform: "translate(0,0) scale(2.8)",
+              position: "absolute",
+              width: `${baseSize}px`, height: `${baseSize}px`,
+              borderRadius: "50%",
+              transform: "scale(2.8)",
               background: `radial-gradient(circle, ${marker.color}18 0%, transparent 70%)`,
               animation: "ping 3s cubic-bezier(0,0,0.2,1) infinite",
               pointerEvents: "none",
             }} />
-            {/* Medium beacon */}
             <div style={{
-              position: "absolute", inset: 0, borderRadius: "50%",
-              transform: "translate(0,0) scale(2.0)",
+              position: "absolute",
+              width: `${baseSize}px`, height: `${baseSize}px`,
+              borderRadius: "50%",
+              transform: "scale(2.0)",
               background: `radial-gradient(circle, ${marker.color}22 0%, transparent 65%)`,
               animation: "ping 3s cubic-bezier(0,0,0.2,1) 0.8s infinite",
               pointerEvents: "none",
@@ -93,11 +101,45 @@ export default function MapMarkerComponent({ marker }: Props) {
           </>
         )}
 
-        {/* Tooltip */}
+        {/* ── Ping ring (unlocked — outside button so it's never clipped) ── */}
+        {unlocked && (
+          <div
+            style={{
+              position: "absolute",
+              width: `${currentSize}px`,
+              height: `${currentSize}px`,
+              borderRadius: "50%",
+              animation: `ping ${featured ? "2.5s" : "2s"} cubic-bezier(0,0,0.2,1) infinite`,
+              background: `${marker.color}${featured ? "25" : "20"}`,
+              border: `1px solid ${marker.color}${featured ? "50" : "40"}`,
+              pointerEvents: "none",
+              zIndex: 1,
+            }}
+          />
+        )}
+
+        {/* ── Featured: second slower ping ring ── */}
+        {featured && unlocked && (
+          <div
+            style={{
+              position: "absolute",
+              width: `${currentSize}px`,
+              height: `${currentSize}px`,
+              borderRadius: "50%",
+              animation: "ping 2.5s cubic-bezier(0,0,0.2,1) 1.2s infinite",
+              background: `${marker.color}15`,
+              border: `1px solid ${marker.color}35`,
+              pointerEvents: "none",
+              zIndex: 1,
+            }}
+          />
+        )}
+
+        {/* ── Tooltip ── */}
         {hovered && !transitioning && (
           <div
             className="absolute bottom-full left-1/2 mb-3 pointer-events-none"
-            style={{ transform: "translateX(-50%)", width: featured ? "220px" : "190px", animation: "fadeInUp 0.15s ease" }}
+            style={{ transform: "translateX(-50%)", width: featured ? "220px" : "190px", animation: "fadeInUp 0.15s ease", zIndex: 40 }}
           >
             <div
               className="rounded-xl px-3 py-2.5 text-center"
@@ -138,11 +180,11 @@ export default function MapMarkerComponent({ marker }: Props) {
           </div>
         )}
 
-        {/* Featured label — always visible below marker */}
+        {/* ── Featured label — always visible below marker ── */}
         {featured && unlocked && (
           <div
             className="absolute top-full left-1/2 mt-1.5 pointer-events-none"
-            style={{ transform: "translateX(-50%)", whiteSpace: "nowrap" }}
+            style={{ transform: "translateX(-50%)", whiteSpace: "nowrap", zIndex: 2 }}
           >
             <p style={{
               fontFamily: "Georgia, serif",
@@ -158,14 +200,15 @@ export default function MapMarkerComponent({ marker }: Props) {
           </div>
         )}
 
-        {/* Button */}
+        {/* ── Button ── */}
         <button
           onClick={handleClick}
           disabled={!unlocked}
           className="relative flex items-center justify-center rounded-full transition-all duration-200 focus:outline-none"
           style={{
-            width: `${hovered && unlocked ? hoverSize : baseSize}px`,
-            height: `${hovered && unlocked ? hoverSize : baseSize}px`,
+            width: `${currentSize}px`,
+            height: `${currentSize}px`,
+            zIndex: 2,
             background: unlocked
               ? hovered
                 ? `radial-gradient(circle, ${marker.color}35 0%, ${marker.color}18 100%)`
@@ -194,7 +237,6 @@ export default function MapMarkerComponent({ marker }: Props) {
           }}
           aria-label={marker.label}
         >
-          {/* Icon */}
           <span style={{ fontSize: `${iconSize}px`, transition: "font-size 0.2s ease", lineHeight: 1 }}>
             {unlocked ? marker.icon : "🔒"}
           </span>
@@ -204,30 +246,6 @@ export default function MapMarkerComponent({ marker }: Props) {
             <span style={{ position: "absolute", top: featured ? "-6px" : "-4px", right: featured ? "-6px" : "-4px", fontSize: featured ? "15px" : "12px", lineHeight: 1, filter: "drop-shadow(0 0 4px rgba(80,200,80,0.8))" }}>
               ✅
             </span>
-          )}
-
-          {/* Ping ring */}
-          {unlocked && (
-            <span
-              className="absolute inset-0 rounded-full"
-              style={{
-                animation: `ping ${featured ? "2.5s" : "2s"} cubic-bezier(0,0,0.2,1) infinite`,
-                background: `${marker.color}${featured ? "25" : "20"}`,
-                border: `1px solid ${marker.color}${featured ? "50" : "40"}`,
-              }}
-            />
-          )}
-
-          {/* Featured: second slower ping ring */}
-          {featured && unlocked && (
-            <span
-              className="absolute inset-0 rounded-full"
-              style={{
-                animation: "ping 2.5s cubic-bezier(0,0,0.2,1) 1.2s infinite",
-                background: `${marker.color}15`,
-                border: `1px solid ${marker.color}35`,
-              }}
-            />
           )}
         </button>
       </div>

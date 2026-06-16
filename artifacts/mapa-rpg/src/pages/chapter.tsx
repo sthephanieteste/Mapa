@@ -1,6 +1,6 @@
 import { useParams, useLocation } from "wouter";
 import { CHAPTERS } from "@/data/chapters";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Avatar from "@/components/Avatar";
 import { musicControls } from "@/hooks/useMusicPlayer";
 import { useProgress } from "@/hooks/useProgress";
@@ -97,6 +97,15 @@ export default function ChapterPage() {
   const [confirmReset, setConfirmReset] = useState(false);
   const [resetKey, setResetKey] = useState(0);
   const [showSmoke, setShowSmoke] = useState<"in" | "out" | null>(null);
+
+  // Play Chuva de Arroz exclusively when O Futuro chapter opens
+  const chapterId = params.id ?? "";
+  useEffect(() => {
+    if (chapterId === "o-futuro") {
+      musicControls.playFuturoTrack();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chapterId]);
   const [showSuccess, setShowSuccess] = useState(false);
 
   function handleChapterComplete(_nextId: string | null) {
