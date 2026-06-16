@@ -1,88 +1,118 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 
-export const MIN_ZOOM = 1.0;
-export const MAX_ZOOM = 3.0;
+export const WORLD_W = 1600;
+export const WORLD_H = 900;
+const MAX_ZOOM = 3.0;
 const DRAG_THRESHOLD = 5;
 const ZOOM_FACTOR = 1.14;
 
-function getContainerSize(el: HTMLElement) {
-  return { w: el.clientWidth, h: el.clientHeight };
+function getContainerRect(el: HTMLElement) {
+  return { cw: el.clientWidth, ch: el.clientHeight };
 }
 
-function clampOffset(x: number, y: number, zoom: number, w: number, h: number) {
-  return {
-    x: Math.min(0, Math.max(w * (1 - zoom), x)),
-    y: Math.min(0, Math.max(h * (1 - zoom), y)),
-  };
+/** Returns clamped/centered offset so the scaled world stays within container */
+function clampOffset(x: number, y: number, zoom: number, cw: number, ch: number) {
+  const sw = WORLD_W * zoom;
+  const sh = WORLD_H * zoom;
+  const ox = sw <= cw ? (cw - sw) / 2 : Math.min(0, Math.max(cw - sw, x));
+  const oy = sh <= ch ? (ch - sh) / 2 : Math.min(0, Math.max(ch - sh, y));
+  return { x: ox, y: oy };
+}
+
+/** Initial zoom that fits the entire world inside the container */
+function fitZoom(cw: number, ch: number) {
+  return Math.min(cw / WORLD_W, ch / WORLD_H);
+}
+
+function getInitialState() {
+  const cw = window.innerWidth;
+  const ch = Math.max(1, window.innerHeight - 48);
+  const zoom = fitZoom(cw, ch);
+  const sw = WORLD_W * zoom;
+  const sh = WORLD_H * zoom;
+  return { zoom, offset: { x: (cw - sw) / 2, y: (ch - sh) / 2 } };
 }
 
 function applyZoomAtPoint(
-  newZoom: number,
-  pivotX: number,
-  pivotY: number,
-  curZoom: number,
-  curOffset: { x: number; y: number },
-  w: number,
-  h: number
+  newZoom: number, pivotX: number, pivotY: number,
+  curZoom: number, curOffset: { x: number; y: number },
+  cw: number, ch: number,
+  minZoom: number
 ) {
-  const clamped = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, newZoom));
+  const clamped = Math.min(MAX_ZOOM, Math.max(minZoom, newZoom));
   const worldX = (pivotX - curOffset.x) / curZoom;
   const worldY = (pivotY - curOffset.y) / curZoom;
   const nx = pivotX - worldX * clamped;
   const ny = pivotY - worldY * clamped;
-  return { zoom: clamped, offset: clampOffset(nx, ny, clamped, w, h) };
+  return { zoom: clamped, offset: clampOffset(nx, ny, clamped, cw, ch) };
 }
 
 export function useMapControls() {
-  const [zoom, setZoomState] = useState(1.0);
-  const [offset, setOffsetState] = useState({ x: 0, y: 0 });
+  const initial = getInitialState();
+  const [zoom, setZoomState] = useState(initial.zoom);
+  const [offset, setOffsetState] = useState(initial.offset);
   const [dragging, setDragging] = useState(false);
 
-  const zoomRef = useRef(1.0);
-  const offsetRef = useRef({ x: 0, y: 0 });
-
+  const minZoomRef = useRef(initial.zoom);
+  const zoomRef = useRef(initial.zoom);
+  const offsetRef = useRef(initial.offset);
   const containerRef = useRef<HTMLDivElement>(null);
+
   const isDragging = useRef(false);
   const dragMoved = useRef(false);
   const pointerStart = useRef({ x: 0, y: 0 });
   const offsetAtStart = useRef({ x: 0, y: 0 });
-
   const pinchStart = useRef({ dist: 0, midX: 0, midY: 0, zoom: 1, offX: 0, offY: 0 });
 
   const commit = useCallback((z: number, o: { x: number; y: number }) => {
     zoomRef.current = z;
     offsetRef.current = o;
     setZoomState(z);
-    setOffsetState(o);
+    setOffsetState({ ...o });
   }, []);
 
-  const containerSize = useCallback(() => {
+  const getSize = useCallback(() => {
     const el = containerRef.current;
-    if (!el) return { w: window.innerWidth, h: window.innerHeight - 48 };
-    return getContainerSize(el);
+    if (el) return getContainerRect(el);
+    return { cw: window.innerWidth, ch: Math.max(1, window.innerHeight - 48) };
   }, []);
 
+  // Re-fit on window resize
+  useEffect(() => {
+    const onResize = () => {
+      const { cw, ch } = getSize();
+      const mz = fitZoom(cw, ch);
+      minZoomRef.current = mz;
+      const newZoom = Math.max(mz, zoomRef.current);
+      const clamped = clampOffset(offsetRef.current.x, offsetRef.current.y, newZoom, cw, ch);
+      commit(newZoom, clamped);
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [commit, getSize]);
+
+  // Wheel zoom + touchmove (must be non-passive)
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
 
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
+      const { cw, ch } = getContainerRect(el);
       const rect = el.getBoundingClientRect();
-      const { w, h } = containerSize();
       const pivotX = e.clientX - rect.left;
       const pivotY = e.clientY - rect.top;
       const factor = e.deltaY < 0 ? ZOOM_FACTOR : 1 / ZOOM_FACTOR;
       const res = applyZoomAtPoint(
         zoomRef.current * factor, pivotX, pivotY,
-        zoomRef.current, offsetRef.current, w, h
+        zoomRef.current, offsetRef.current, cw, ch, minZoomRef.current
       );
       commit(res.zoom, res.offset);
     };
 
     const onTouchMove = (e: TouchEvent) => {
       e.preventDefault();
-      const { w, h } = containerSize();
+      const { cw, ch } = getContainerRect(el);
       const rect = el.getBoundingClientRect();
 
       if (e.touches.length === 1 && isDragging.current) {
@@ -94,9 +124,8 @@ export function useMapControls() {
         if (!dragMoved.current) return;
         const nx = offsetAtStart.current.x + dx;
         const ny = offsetAtStart.current.y + dy;
-        const clamped = clampOffset(nx, ny, zoomRef.current, w, h);
-        offsetRef.current = clamped;
-        setOffsetState({ ...clamped });
+        setOffsetState(clampOffset(nx, ny, zoomRef.current, cw, ch));
+        offsetRef.current = clampOffset(nx, ny, zoomRef.current, cw, ch);
       } else if (e.touches.length === 2) {
         isDragging.current = false;
         const t0 = e.touches[0];
@@ -108,18 +137,15 @@ export function useMapControls() {
         const res = applyZoomAtPoint(
           newZoom,
           pinchStart.current.midX, pinchStart.current.midY,
-          pinchStart.current.zoom,
-          { x: pinchStart.current.offX, y: pinchStart.current.offY },
-          w, h
+          pinchStart.current.zoom, { x: pinchStart.current.offX, y: pinchStart.current.offY },
+          cw, ch, minZoomRef.current
         );
         commit(res.zoom, res.offset);
-        // Update mid for smooth pan-during-pinch
-        pinchStart.current.midX = midX;
-        pinchStart.current.midY = midY;
-        pinchStart.current.dist = dist;
-        pinchStart.current.zoom = zoomRef.current;
-        pinchStart.current.offX = offsetRef.current.x;
-        pinchStart.current.offY = offsetRef.current.y;
+        pinchStart.current = {
+          dist, midX, midY,
+          zoom: zoomRef.current,
+          offX: offsetRef.current.x, offY: offsetRef.current.y,
+        };
       }
     };
 
@@ -129,7 +155,7 @@ export function useMapControls() {
       el.removeEventListener("wheel", onWheel);
       el.removeEventListener("touchmove", onTouchMove);
     };
-  }, [commit, containerSize]);
+  }, [commit]);
 
   const onPointerDown = useCallback((e: React.PointerEvent) => {
     if (e.pointerType === "touch") return;
@@ -143,19 +169,21 @@ export function useMapControls() {
 
   const onPointerMove = useCallback((e: React.PointerEvent) => {
     if (!isDragging.current || e.pointerType === "touch") return;
-    const { w, h } = containerSize();
+    const { cw, ch } = getSize();
     const dx = e.clientX - pointerStart.current.x;
     const dy = e.clientY - pointerStart.current.y;
     if (Math.abs(dx) > DRAG_THRESHOLD || Math.abs(dy) > DRAG_THRESHOLD) {
       dragMoved.current = true;
     }
     if (!dragMoved.current) return;
-    const nx = offsetAtStart.current.x + dx;
-    const ny = offsetAtStart.current.y + dy;
-    const clamped = clampOffset(nx, ny, zoomRef.current, w, h);
+    const clamped = clampOffset(
+      offsetAtStart.current.x + dx,
+      offsetAtStart.current.y + dy,
+      zoomRef.current, cw, ch
+    );
     offsetRef.current = clamped;
     setOffsetState({ ...clamped });
-  }, [containerSize]);
+  }, [getSize]);
 
   const onPointerUp = useCallback((e: React.PointerEvent) => {
     if (e.pointerType === "touch") return;
@@ -181,8 +209,7 @@ export function useMapControls() {
         midX: (t0.clientX + t1.clientX) / 2 - (rect?.left ?? 0),
         midY: (t0.clientY + t1.clientY) / 2 - (rect?.top ?? 0),
         zoom: zoomRef.current,
-        offX: offsetRef.current.x,
-        offY: offsetRef.current.y,
+        offX: offsetRef.current.x, offY: offsetRef.current.y,
       };
     }
   }, []);
@@ -193,16 +220,23 @@ export function useMapControls() {
   }, []);
 
   const zoomTo = useCallback((factor: number) => {
-    const { w, h } = containerSize();
+    const { cw, ch } = getSize();
     const res = applyZoomAtPoint(
-      zoomRef.current * factor, w / 2, h / 2,
-      zoomRef.current, offsetRef.current, w, h
+      zoomRef.current * factor, cw / 2, ch / 2,
+      zoomRef.current, offsetRef.current, cw, ch, minZoomRef.current
     );
     commit(res.zoom, res.offset);
-  }, [commit, containerSize]);
+  }, [commit, getSize]);
 
   const zoomIn = useCallback(() => zoomTo(1.3), [zoomTo]);
   const zoomOut = useCallback(() => zoomTo(1 / 1.3), [zoomTo]);
+  const resetView = useCallback(() => {
+    const { cw, ch } = getSize();
+    const mz = fitZoom(cw, ch);
+    const sw = WORLD_W * mz;
+    const sh = WORLD_H * mz;
+    commit(mz, { x: (cw - sw) / 2, y: (ch - sh) / 2 });
+  }, [commit, getSize]);
 
   return {
     zoom,
@@ -213,5 +247,7 @@ export function useMapControls() {
     handlers: { onPointerDown, onPointerMove, onPointerUp, onTouchStart, onTouchEnd },
     zoomIn,
     zoomOut,
+    resetView,
+    minZoom: minZoomRef.current,
   };
 }

@@ -4,11 +4,14 @@ import GameHUD from "@/components/GameHUD";
 import CloudLayer from "@/components/CloudLayer";
 import UnlockCelebration from "@/components/UnlockCelebration";
 import SecretEnding from "@/components/SecretEnding";
-import { useMapControls, MIN_ZOOM, MAX_ZOOM } from "@/hooks/useMapControls";
+import { useMapControls, WORLD_W, WORLD_H } from "@/hooks/useMapControls";
 
 export default function MapPage() {
-  const { zoom, offset, dragging, dragMoved, containerRef, handlers, zoomIn, zoomOut } =
+  const { zoom, offset, dragging, dragMoved, containerRef, handlers, zoomIn, zoomOut, resetView, minZoom } =
     useMapControls();
+
+  const atMin = zoom <= minZoom + 0.001;
+  const atMax = zoom >= 3.0 - 0.001;
 
   return (
     <div
@@ -25,6 +28,7 @@ export default function MapPage() {
           cursor: dragging ? "grabbing" : "grab",
           touchAction: "none",
           userSelect: "none",
+          background: "#0a0704",
         }}
         {...handlers}
         onClickCapture={(e) => {
@@ -34,24 +38,33 @@ export default function MapPage() {
           }
         }}
       >
-        {/* ── WORLD: everything that pans/zooms together ── */}
+        {/* ── WORLD: fixed 1600×900 canvas that pans/zooms together ── */}
         <div
           style={{
             position: "absolute",
             top: 0,
             left: 0,
-            width: "100%",
-            height: "100%",
+            width: `${WORLD_W}px`,
+            height: `${WORLD_H}px`,
             transform: `translate(${offset.x}px, ${offset.y}px) scale(${zoom})`,
             transformOrigin: "0 0",
             willChange: "transform",
           }}
         >
-          {/* Map image */}
+          {/* Map image — fills the fixed world exactly */}
           <img
             src={`${import.meta.env.BASE_URL}mapa-rpg-illustration.png`}
             alt="Mapa RPG"
-            className="absolute inset-0 w-full h-full object-cover select-none"
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              display: "block",
+              objectFit: "fill",
+              userSelect: "none",
+              pointerEvents: "none",
+            }}
             draggable={false}
           />
 
@@ -59,7 +72,7 @@ export default function MapPage() {
           <CloudLayer />
 
           {/* Markers */}
-          <div className="absolute inset-0">
+          <div style={{ position: "absolute", inset: 0 }}>
             {MAP_MARKERS.map((marker) => (
               <MapMarkerComponent key={marker.id} marker={marker} />
             ))}
@@ -79,9 +92,34 @@ export default function MapPage() {
           gap: "6px",
         }}
       >
+        {/* Reset view */}
+        <button
+          onClick={resetView}
+          aria-label="Ver mapa completo"
+          title="Ver mapa completo"
+          style={{
+            width: 36,
+            height: 36,
+            borderRadius: "50%",
+            background: "rgba(8,5,2,0.9)",
+            border: "1px solid rgba(200,140,40,0.55)",
+            color: "#e8c060",
+            fontSize: "14px",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            backdropFilter: "blur(8px)",
+            boxShadow: "0 0 10px rgba(200,140,40,0.2)",
+          }}
+        >
+          ⊡
+        </button>
+
+        {/* Zoom in */}
         <button
           onClick={zoomIn}
-          disabled={zoom >= MAX_ZOOM}
+          disabled={atMax}
           aria-label="Aproximar"
           style={{
             width: 36,
@@ -89,24 +127,26 @@ export default function MapPage() {
             borderRadius: "50%",
             background: "rgba(8,5,2,0.9)",
             border: "1px solid rgba(200,140,40,0.55)",
-            color: zoom >= MAX_ZOOM ? "rgba(200,160,60,0.3)" : "#e8c060",
+            color: atMax ? "rgba(200,160,60,0.3)" : "#e8c060",
             fontSize: "20px",
             fontWeight: "bold",
-            cursor: zoom >= MAX_ZOOM ? "not-allowed" : "pointer",
+            cursor: atMax ? "not-allowed" : "pointer",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             backdropFilter: "blur(8px)",
-            boxShadow: zoom >= MAX_ZOOM ? "none" : "0 0 10px rgba(200,140,40,0.2)",
-            transition: "color 0.2s, box-shadow 0.2s",
+            boxShadow: atMax ? "none" : "0 0 10px rgba(200,140,40,0.2)",
+            transition: "color 0.2s",
             lineHeight: 1,
           }}
         >
           +
         </button>
+
+        {/* Zoom out */}
         <button
           onClick={zoomOut}
-          disabled={zoom <= MIN_ZOOM}
+          disabled={atMin}
           aria-label="Afastar"
           style={{
             width: 36,
@@ -114,16 +154,16 @@ export default function MapPage() {
             borderRadius: "50%",
             background: "rgba(8,5,2,0.9)",
             border: "1px solid rgba(200,140,40,0.55)",
-            color: zoom <= MIN_ZOOM ? "rgba(200,160,60,0.3)" : "#e8c060",
+            color: atMin ? "rgba(200,160,60,0.3)" : "#e8c060",
             fontSize: "22px",
             fontWeight: "bold",
-            cursor: zoom <= MIN_ZOOM ? "not-allowed" : "pointer",
+            cursor: atMin ? "not-allowed" : "pointer",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             backdropFilter: "blur(8px)",
-            boxShadow: zoom <= MIN_ZOOM ? "none" : "0 0 10px rgba(200,140,40,0.2)",
-            transition: "color 0.2s, box-shadow 0.2s",
+            boxShadow: atMin ? "none" : "0 0 10px rgba(200,140,40,0.2)",
+            transition: "color 0.2s",
             lineHeight: 1,
           }}
         >
@@ -131,7 +171,7 @@ export default function MapPage() {
         </button>
       </div>
 
-      {/* ── UNLOCK CELEBRATION (fixed/full-screen, not part of world) ── */}
+      {/* ── UNLOCK CELEBRATION (fixed/full-screen, outside world) ── */}
       <UnlockCelebration />
 
       {/* ── GAME HUD ── */}
@@ -150,6 +190,7 @@ export default function MapPage() {
           fontFamily: "Georgia, serif",
           backdropFilter: "blur(8px)",
           letterSpacing: "0.04em",
+          zIndex: 40,
         }}
       >
         ✦ Clique nos locais para explorar ✦
