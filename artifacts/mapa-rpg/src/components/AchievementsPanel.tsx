@@ -231,11 +231,9 @@ export default function AchievementsPanel({ onClose }: Props) {
                 >
                   {selected.title}
                 </h3>
-                {selected.date && (
-                  <p className="text-xs" style={{ color: "rgba(180,140,60,0.5)", fontFamily: "Georgia, serif" }}>
-                    {selected.date} · +{selected.xp} XP
-                  </p>
-                )}
+                <p className="text-xs" style={{ color: "rgba(180,140,60,0.5)", fontFamily: "Georgia, serif" }}>
+                  +{selected.xp} XP
+                </p>
               </div>
             </div>
             <p
@@ -313,15 +311,7 @@ function AchievementCard({
                 +{ach.xp} XP
               </span>
             )}
-            {ach.date && ach.unlocked && (
-              <span
-                className="text-xs"
-                style={{ color: "rgba(180,140,60,0.4)", fontSize: "9px", fontFamily: "Georgia, serif" }}
-              >
-                {ach.date}
-              </span>
-            )}
-          </div>
+            </div>
         </div>
 
         {ach.unlocked && (

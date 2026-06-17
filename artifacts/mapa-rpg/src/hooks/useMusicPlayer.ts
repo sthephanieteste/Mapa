@@ -24,6 +24,7 @@ const INITIAL_VOLUME = 0.2;
 const FADE_STEPS = 40;
 const FADE_MS = 25;
 export const STORAGE_KEY = "nossa-historia-playlist";
+export const FUTURO_UNLOCKED_KEY = "nossa-historia-futuro-music";
 
 // ── Module-level singleton (survives SPA navigation) ──────────────────────
 let _audioEl: HTMLAudioElement | null = null;
@@ -31,9 +32,18 @@ let _currentIdx = 0;
 let _isPlaying = false;
 let _pausedForVideo = false;
 let _fadeTimer: ReturnType<typeof setInterval> | null = null;
+let _futuroTimeout: ReturnType<typeof setTimeout> | null = null;
+let _futuroUnlocked: boolean = (() => {
+  try { return localStorage.getItem(FUTURO_UNLOCKED_KEY) === "true"; } catch { return false; }
+})();
 const _listeners = new Set<() => void>();
 
 function _notify() { _listeners.forEach((l) => l()); }
+
+/** Returns the full active playlist (includes Futuro track when unlocked). */
+function _getActivePlaylist(): Track[] {
+  return _futuroUnlocked ? [...PLAYLIST, FUTURO_TRACK] : PLAYLIST;
+}
 
 function _loadState() {
   try {
@@ -56,7 +66,9 @@ function _saveState(time: number) {
 
 function _getAudio(startTime = 0): HTMLAudioElement {
   if (!_audioEl) {
-    _audioEl = new Audio(PLAYLIST[_currentIdx].src);
+    const pl = _getActivePlaylist();
+    const safeIdx = _currentIdx % pl.length;
+    _audioEl = new Audio(pl[safeIdx].src);
     _audioEl.volume = 0;
     _audioEl.currentTime = startTime;
   }
@@ -65,6 +77,7 @@ function _getAudio(startTime = 0): HTMLAudioElement {
 
 function _clearFade() {
   if (_fadeTimer !== null) { clearInterval(_fadeTimer); _fadeTimer = null; }
+  if (_futuroTimeout !== null) { clearTimeout(_futuroTimeout); _futuroTimeout = null; }
 }
 
 /** Immediately stop all playback and reset volume to zero. */
@@ -77,37 +90,46 @@ function _hardStop() {
   _pausedForVideo = false;
 }
 
-function _fadeIn(audio: HTMLAudioElement) {
+function _fadeIn(audio: HTMLAudioElement, steps = FADE_STEPS, ms = FADE_MS) {
   _clearFade();
   audio.play().catch(() => {});
-  const step = INITIAL_VOLUME / FADE_STEPS;
+  const step = INITIAL_VOLUME / steps;
   _fadeTimer = setInterval(() => {
     if (audio.volume + step >= INITIAL_VOLUME) {
       audio.volume = INITIAL_VOLUME; _clearFade();
     } else { audio.volume += step; }
-  }, FADE_MS);
+  }, ms);
 }
 
-function _fadeOut(audio: HTMLAudioElement, onDone: () => void) {
+function _fadeOut(
+  audio: HTMLAudioElement,
+  onDone: () => void,
+  steps = FADE_STEPS,
+  ms = FADE_MS,
+) {
   _clearFade();
-  const step = Math.max(audio.volume / FADE_STEPS, 0.001);
+  const step = Math.max((audio.volume || INITIAL_VOLUME) / steps, 0.001);
   _fadeTimer = setInterval(() => {
     if (audio.volume - step <= 0) {
       audio.volume = 0; audio.pause(); _clearFade(); onDone();
     } else { audio.volume -= step; }
-  }, FADE_MS);
+  }, ms);
 }
 
 function _wireEnded() {
   const audio = _getAudio();
-  audio.onended = () => { _playTrackInternal((_currentIdx + 1) % PLAYLIST.length, true); };
+  audio.onended = () => {
+    const pl = _getActivePlaylist();
+    _playTrackInternal((_currentIdx + 1) % pl.length, true);
+  };
 }
 
 function _playTrackInternal(idx: number, autoplay: boolean) {
-  _hardStop();                          // always fully stop first
-  _currentIdx = idx;
+  _hardStop();
+  const pl = _getActivePlaylist();
+  _currentIdx = idx % pl.length;
   const audio = _getAudio();
-  audio.src = PLAYLIST[idx].src;
+  audio.src = pl[_currentIdx].src;
   audio.currentTime = 0;
   audio.volume = 0;
   _wireEnded();
@@ -152,30 +174,57 @@ export const musicControls = {
   },
 
   next() {
-    _playTrackInternal((_currentIdx + 1) % PLAYLIST.length, _isPlaying);
+    const pl = _getActivePlaylist();
+    _playTrackInternal((_currentIdx + 1) % pl.length, _isPlaying);
   },
 
   playTrack(idx: number) {
     _playTrackInternal(idx, true);
   },
 
-  /** Play the special O Futuro track, replacing whatever is currently playing. */
+  /**
+   * Enter the Futuro chapter.
+   * – First time ever: cinematic fade-out (2.5 s) → pause (0.5 s) → fade-in (3 s),
+   *   unlocks the track in the library.
+   * – Subsequent visits: does nothing (preserves whatever music is playing).
+   */
   playFuturoTrack() {
-    _hardStop();
+    if (_futuroUnlocked) return; // already experienced — do nothing
+
+    // Mark as unlocked immediately so the library updates
+    _futuroUnlocked = true;
+    try { localStorage.setItem(FUTURO_UNLOCKED_KEY, "true"); } catch {}
+    _notify(); // update library UI right away
+
     const audio = _getAudio();
-    audio.src = FUTURO_TRACK.src;
-    audio.currentTime = 0;
-    audio.volume = 0;
-    // When Chuva de Arroz ends, smoothly return to the main playlist
-    audio.onended = () => { _playTrackInternal(0, true); };
-    _isPlaying = true;
-    _fadeIn(audio);
-    _notify();
+
+    // Slow fade-out: ~2.5 s (40 steps × 62 ms)
+    _fadeOut(audio, () => {
+      // Brief cinematic pause before the new track begins
+      _futuroTimeout = setTimeout(() => {
+        _futuroTimeout = null;
+
+        const pl = _getActivePlaylist();
+        const futuroIdx = pl.length - 1; // FUTURO_TRACK is last
+        _currentIdx = futuroIdx;
+        audio.src = FUTURO_TRACK.src;
+        audio.currentTime = 0;
+        audio.volume = 0;
+        // When Chuva de Arroz ends, return to first track
+        audio.onended = () => { _playTrackInternal(0, true); };
+        _isPlaying = true;
+
+        // Slow fade-in: ~3 s (40 steps × 75 ms)
+        _fadeIn(audio, 40, 75);
+        _saveState(0);
+        _notify();
+      }, 500);
+    }, 40, 62);
   },
 
   /** Call when a video starts playing — fades out music. */
   pauseForVideo() {
-    if (_pausedForVideo) return;        // already paused for video
+    if (_pausedForVideo) return;
     _pausedForVideo = true;
     if (_isPlaying) {
       _fadeOut(_getAudio(), () => {});
@@ -199,8 +248,17 @@ export const musicControls = {
     }
   },
 
+  /** Remove the Futuro music unlock (called on full reset). */
+  resetFuturoUnlock() {
+    _futuroUnlocked = false;
+    try { localStorage.removeItem(FUTURO_UNLOCKED_KEY); } catch {}
+    _notify();
+  },
+
+  isFuturoUnlocked(): boolean { return _futuroUnlocked; },
+
   getState() {
-    return { playing: _isPlaying, currentIdx: _currentIdx };
+    return { playing: _isPlaying, currentIdx: _currentIdx, futuroUnlocked: _futuroUnlocked };
   },
 };
 
@@ -217,10 +275,13 @@ export function useMusicPlayer() {
   const next = useCallback(() => musicControls.next(), []);
   const playTrack = useCallback((idx: number) => musicControls.playTrack(idx), []);
 
+  const playlist = _getActivePlaylist();
+
   return {
     playing: _isPlaying,
     currentIdx: _currentIdx,
-    playlist: PLAYLIST,
+    playlist,
+    futuroUnlocked: _futuroUnlocked,
     toggle,
     next,
     playTrack,

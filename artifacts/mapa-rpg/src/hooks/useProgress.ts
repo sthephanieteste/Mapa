@@ -1,5 +1,6 @@
 import { useEffect, useReducer, useCallback } from "react";
 import { CHAPTER_ORDER } from "@/data/progression";
+import { musicControls } from "@/hooks/useMusicPlayer";
 
 export const STORAGE_KEY = "nossa-historia-progress";
 export const ENDING_SHOWN_KEY = "nossa-historia-ending-shown";
@@ -113,6 +114,7 @@ export function useProgress() {
       localStorage.removeItem(ENDING_SHOWN_KEY);
       localStorage.removeItem(ENDING_UNLOCKED_KEY);
     } catch {}
+    musicControls.resetFuturoUnlock();
     _state = { unlockedChapters: [CHAPTER_ORDER[0]], completedChapters: [], endingUnlocked: false };
     _listeners.forEach((l) => l());
     window.location.href = "/";

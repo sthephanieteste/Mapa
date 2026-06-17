@@ -1,11 +1,14 @@
-import { useMusicPlayer, PLAYLIST } from "@/hooks/useMusicPlayer";
+import { useMusicPlayer, FUTURO_TRACK } from "@/hooks/useMusicPlayer";
 
 interface Props {
   onClose: () => void;
 }
 
 export default function MusicLibrary({ onClose }: Props) {
-  const { playing, currentIdx, playTrack, toggle } = useMusicPlayer();
+  const { playing, currentIdx, playlist, futuroUnlocked, playTrack, toggle } = useMusicPlayer();
+
+  const safeIdx = currentIdx < playlist.length ? currentIdx : 0;
+  const currentTrack = playlist[safeIdx];
 
   return (
     <div
@@ -33,7 +36,7 @@ export default function MusicLibrary({ onClose }: Props) {
               🎵 Biblioteca de Músicas
             </p>
             <p className="text-xs mt-0.5" style={{ color: "rgba(200,160,70,0.5)", fontFamily: "Georgia, serif" }}>
-              {PLAYLIST.length} faixas disponíveis
+              {playlist.length} faixa{playlist.length !== 1 ? "s" : ""} disponíve{playlist.length !== 1 ? "is" : "l"}
             </p>
           </div>
           <button
@@ -46,37 +49,40 @@ export default function MusicLibrary({ onClose }: Props) {
         </div>
 
         {/* Now playing bar */}
-        <div
-          className="px-5 py-3 flex items-center gap-3"
-          style={{ background: "rgba(200,140,20,0.08)", borderBottom: "1px solid rgba(200,140,40,0.12)" }}
-        >
+        {currentTrack && (
           <div
-            className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center"
-            style={{ background: "rgba(200,140,20,0.2)", border: "1px solid rgba(200,140,40,0.4)" }}
+            className="px-5 py-3 flex items-center gap-3"
+            style={{ background: "rgba(200,140,20,0.08)", borderBottom: "1px solid rgba(200,140,40,0.12)" }}
           >
-            <span style={{ fontSize: "13px" }}>{playing ? "🔊" : "🔇"}</span>
+            <div
+              className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center"
+              style={{ background: "rgba(200,140,20,0.2)", border: "1px solid rgba(200,140,40,0.4)" }}
+            >
+              <span style={{ fontSize: "13px" }}>{playing ? "🔊" : "🔇"}</span>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-semibold truncate" style={{ color: "#e8c060", fontFamily: "Georgia, serif" }}>
+                {currentTrack.name}
+              </p>
+              <p className="text-xs truncate" style={{ color: "rgba(200,160,70,0.55)", fontFamily: "Georgia, serif" }}>
+                {currentTrack.artist}
+              </p>
+            </div>
+            <button
+              onClick={toggle}
+              className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110"
+              style={{ background: playing ? "rgba(200,140,20,0.25)" : "rgba(40,25,5,0.6)", border: `1px solid ${playing ? "rgba(200,140,40,0.5)" : "rgba(200,140,40,0.2)"}` }}
+            >
+              <span style={{ fontSize: "14px" }}>{playing ? "⏸" : "▶"}</span>
+            </button>
           </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-xs font-semibold truncate" style={{ color: "#e8c060", fontFamily: "Georgia, serif" }}>
-              {PLAYLIST[currentIdx].name}
-            </p>
-            <p className="text-xs truncate" style={{ color: "rgba(200,160,70,0.55)", fontFamily: "Georgia, serif" }}>
-              {PLAYLIST[currentIdx].artist}
-            </p>
-          </div>
-          <button
-            onClick={toggle}
-            className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110"
-            style={{ background: playing ? "rgba(200,140,20,0.25)" : "rgba(40,25,5,0.6)", border: `1px solid ${playing ? "rgba(200,140,40,0.5)" : "rgba(200,140,40,0.2)"}` }}
-          >
-            <span style={{ fontSize: "14px" }}>{playing ? "⏸" : "▶"}</span>
-          </button>
-        </div>
+        )}
 
         {/* Track list */}
         <div className="py-2 max-h-72 overflow-y-auto">
-          {PLAYLIST.map((track, idx) => {
-            const isActive = idx === currentIdx;
+          {playlist.map((track, idx) => {
+            const isActive = idx === safeIdx;
+            const isFuturo = track.src === FUTURO_TRACK.src;
             return (
               <button
                 key={idx}
@@ -89,12 +95,12 @@ export default function MusicLibrary({ onClose }: Props) {
                   className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs"
                   style={{
                     background: isActive ? "rgba(200,140,20,0.25)" : "rgba(30,18,5,0.5)",
-                    border: `1px solid ${isActive ? "rgba(200,140,40,0.5)" : "rgba(200,140,40,0.15)"}`,
+                    border: `1px solid ${isActive ? "rgba(200,140,40,0.5)" : isFuturo ? "rgba(200,160,80,0.3)" : "rgba(200,140,40,0.15)"}`,
                     color: isActive ? "#e8c060" : "rgba(200,160,70,0.4)",
                     fontFamily: "Georgia, serif",
                   }}
                 >
-                  {isActive && playing ? "♪" : idx + 1}
+                  {isActive && playing ? "♪" : isFuturo ? "✦" : idx + 1}
                 </div>
 
                 {/* Track info */}
@@ -103,11 +109,16 @@ export default function MusicLibrary({ onClose }: Props) {
                     className="text-sm truncate"
                     style={{
                       fontFamily: "Georgia, serif",
-                      color: isActive ? "#f0d888" : "rgba(220,185,110,0.85)",
+                      color: isActive ? "#f0d888" : isFuturo ? "rgba(240,200,120,0.9)" : "rgba(220,185,110,0.85)",
                       fontWeight: isActive ? "bold" : "normal",
                     }}
                   >
                     {track.name}
+                    {isFuturo && (
+                      <span style={{ marginLeft: 6, fontSize: "9px", color: "rgba(200,160,60,0.5)", letterSpacing: "0.08em" }}>
+                        ESPECIAL
+                      </span>
+                    )}
                   </p>
                   <p className="text-xs truncate" style={{ color: "rgba(180,140,60,0.5)", fontFamily: "Georgia, serif" }}>
                     {track.artist}
@@ -125,6 +136,27 @@ export default function MusicLibrary({ onClose }: Props) {
             );
           })}
         </div>
+
+        {/* Futuro teaser — shown before unlock */}
+        {!futuroUnlocked && (
+          <div
+            className="mx-4 mb-3 px-4 py-3 rounded-xl flex items-center gap-3"
+            style={{
+              background: "rgba(200,140,20,0.06)",
+              border: "1px dashed rgba(200,140,40,0.2)",
+            }}
+          >
+            <span style={{ fontSize: "16px", opacity: 0.4 }}>🔒</span>
+            <div>
+              <p style={{ fontFamily: "Georgia, serif", fontSize: "11px", color: "rgba(200,160,60,0.5)" }}>
+                1 faixa bloqueada
+              </p>
+              <p style={{ fontFamily: "Georgia, serif", fontSize: "10px", color: "rgba(180,130,40,0.35)", letterSpacing: "0.04em" }}>
+                Descubra ao explorar o capítulo Futuro
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Footer */}
         <div

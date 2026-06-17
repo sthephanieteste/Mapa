@@ -78,28 +78,40 @@ export default function MapMarkerComponent({ marker }: Props) {
         onMouseLeave={() => setHovered(false)}
       >
         {/* ── Ambient glow rays (featured, before completion) ── */}
+        {/*
+          Two-div pattern: outer div holds the translate so the
+          @keyframes ping (which uses scale) doesn't override it.
+        */}
         {featured && unlocked && !completed && (
           <>
             <div style={{
               position: "absolute",
               top: "50%", left: "50%",
-              transform: "translate(-50%, -50%) scale(2.8)",
-              width: `${baseSize}px`, height: `${baseSize}px`,
-              borderRadius: "50%",
-              background: `radial-gradient(circle, ${marker.color}18 0%, transparent 70%)`,
-              animation: "ping 3s cubic-bezier(0,0,0.2,1) infinite",
+              transform: "translate(-50%, -50%)",
+              width: `${baseSize * 2.8}px`, height: `${baseSize * 2.8}px`,
               pointerEvents: "none",
-            }} />
+            }}>
+              <div style={{
+                position: "absolute", inset: 0,
+                borderRadius: "50%",
+                background: `radial-gradient(circle, ${marker.color}18 0%, transparent 70%)`,
+                animation: "ping 3s cubic-bezier(0,0,0.2,1) infinite",
+              }} />
+            </div>
             <div style={{
               position: "absolute",
               top: "50%", left: "50%",
-              transform: "translate(-50%, -50%) scale(2.0)",
-              width: `${baseSize}px`, height: `${baseSize}px`,
-              borderRadius: "50%",
-              background: `radial-gradient(circle, ${marker.color}22 0%, transparent 65%)`,
-              animation: "ping 3s cubic-bezier(0,0,0.2,1) 0.8s infinite",
+              transform: "translate(-50%, -50%)",
+              width: `${baseSize * 2.0}px`, height: `${baseSize * 2.0}px`,
               pointerEvents: "none",
-            }} />
+            }}>
+              <div style={{
+                position: "absolute", inset: 0,
+                borderRadius: "50%",
+                background: `radial-gradient(circle, ${marker.color}22 0%, transparent 65%)`,
+                animation: "ping 3s cubic-bezier(0,0,0.2,1) 0.8s infinite",
+              }} />
+            </div>
           </>
         )}
 
@@ -112,14 +124,18 @@ export default function MapMarkerComponent({ marker }: Props) {
               transform: "translate(-50%, -50%)",
               width: `${currentSize}px`,
               height: `${currentSize}px`,
+              pointerEvents: "none",
+              zIndex: 1,
+            }}
+          >
+            <div style={{
+              position: "absolute", inset: 0,
               borderRadius: "50%",
               animation: `ping ${featured ? "2.5s" : "2s"} cubic-bezier(0,0,0.2,1) infinite`,
               background: `${marker.color}${featured ? "25" : "20"}`,
               border: `1px solid ${marker.color}${featured ? "50" : "40"}`,
-              pointerEvents: "none",
-              zIndex: 1,
-            }}
-          />
+            }} />
+          </div>
         )}
 
         {/* ── Featured: second slower ping ring ── */}
@@ -131,14 +147,18 @@ export default function MapMarkerComponent({ marker }: Props) {
               transform: "translate(-50%, -50%)",
               width: `${currentSize}px`,
               height: `${currentSize}px`,
+              pointerEvents: "none",
+              zIndex: 1,
+            }}
+          >
+            <div style={{
+              position: "absolute", inset: 0,
               borderRadius: "50%",
               animation: "ping 2.5s cubic-bezier(0,0,0.2,1) 1.2s infinite",
               background: `${marker.color}15`,
               border: `1px solid ${marker.color}35`,
-              pointerEvents: "none",
-              zIndex: 1,
-            }}
-          />
+            }} />
+          </div>
         )}
 
         {/* ── Tooltip ── */}
