@@ -123,7 +123,7 @@ export const CHAPTERS: Record<string, Chapter> = {
     title: "Rio de Janeiro",
     subtitle: "Capítulo I — A Origem",
     description:
-      "A cidade que me formou. Entre praias, morros e o olhar do Cristo, foi aqui que eu cresci, sonhei e me preparei para uma jornada que ainda não sabia que estava por vir. O Rio não é só uma cidade — é a raiz de quem eu sou.",
+      "O ponto de partida de tudo.",
     icon: "🌊",
     color: "#2196f3",
     accentColor: "#bbdefb",
@@ -155,7 +155,7 @@ export const CHAPTERS: Record<string, Chapter> = {
     title: "A Viagem",
     subtitle: "Capítulo II — A Mudança",
     description:
-      "Quilômetros de estrada entre o Rio e o Paraná. Uma janela de ônibus, músicas no fone, e a sensação de que algo grande estava prestes a acontecer. Cada curva da estrada era um passo em direção a você.",
+      "Uma viagem comum. Um destino novo. Uma história prestes a começar.",
     icon: "🚌",
     color: "#ff9800",
     accentColor: "#ffe0b2",
@@ -190,7 +190,7 @@ export const CHAPTERS: Record<string, Chapter> = {
     title: "UTFPR Cornélio Procópio",
     subtitle: "Capítulo III — O Encontro",
     description:
-      "Foi aqui, entre os corredores da UTFPR, que o destino nos colocou no mesmo caminho. Um olhar, uma conversa, e o que era desconhecido virou o começo da nossa história. O campus que será para sempre o cenário do nosso primeiro capítulo.",
+      "Naquela época, eram apenas olhares pelo espelho. Hoje, é a nossa história.",
     icon: "🎓",
     color: "#7c3aed",
     accentColor: "#ede9fe",
@@ -261,7 +261,7 @@ export const CHAPTERS: Record<string, Chapter> = {
     title: "Cristo de Cornélio Procópio",
     subtitle: "Capítulo V — O Pedido",
     description:
-      "Foi aqui, aos pés desta estátua, que nossa história mudou para sempre. O lugar onde o pedido aconteceu — um momento que a gente nunca vai esquecer. O Cristo nos assistiu, e o mundo parou por um segundo.",
+      "Foi aqui que nossa história ganhou um novo capítulo. Um momento simples, inesquecível e que carregaremos conosco para sempre.",
     icon: "✝️",
     color: "#f59e0b",
     accentColor: "#fef3c7",
@@ -331,7 +331,7 @@ export const CHAPTERS: Record<string, Chapter> = {
     title: "O Futuro",
     subtitle: "Capítulo ∞ — O que Ainda Está por Vir",
     description:
-      "Área ainda não explorada. Os próximos capítulos estão sendo escritos agora — em tempo real, um dia de cada vez, por dois aventureiros que decidiram continuar essa jornada juntos.",
+      "Os próximos capítulos estão sendo escritos agora — em tempo real, um dia de cada vez.",
     icon: "✨",
     color: "#f59e0b",
     accentColor: "#fef9c3",
