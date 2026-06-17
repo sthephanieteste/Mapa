@@ -331,7 +331,7 @@ export const CHAPTERS: Record<string, Chapter> = {
     title: "O Futuro",
     subtitle: "Capítulo ∞ — O que Ainda Está por Vir",
     description:
-      "Os próximos capítulos estão sendo escritos agora — em tempo real, um dia de cada vez.",
+      "Os próximos capítulos estão sendo escritos agora, em tempo real, um dia de cada vez.",
     icon: "✨",
     color: "#f59e0b",
     accentColor: "#fef9c3",
