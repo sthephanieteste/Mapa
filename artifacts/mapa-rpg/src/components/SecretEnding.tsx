@@ -63,9 +63,10 @@ interface FragmentData {
 }
 
 export default function SecretEnding() {
-  const { completedCount, totalCount, unlockEnding } = useProgress();
+  const { completedCount, totalCount, unlockEnding, endingUnlocked } = useProgress();
   const [phase, setPhase] = useState<Phase>("idle");
   const [fragments, setFragments] = useState<FragmentData[]>([]);
+  const [showAlbumToast, setShowAlbumToast] = useState(false);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const hasStarted = useRef(false);
 
@@ -132,11 +133,23 @@ export default function SecretEnding() {
   }, [buildFragments]);
 
   const handleOpenScroll = useCallback(() => {
+    const isFirstTime = !endingUnlocked;
     unlockEnding();
     setPhase("opening");
-    const id = setTimeout(() => setPhase("reading"), 2200);
+    const id = setTimeout(() => {
+      setPhase("reading");
+      if (isFirstTime) {
+        // Show album-unlock toast shortly after reading view appears
+        const toastId = setTimeout(() => {
+          setShowAlbumToast(true);
+          const dismissId = setTimeout(() => setShowAlbumToast(false), 5000);
+          timers.current.push(dismissId);
+        }, 800);
+        timers.current.push(toastId);
+      }
+    }, 2200);
     timers.current.push(id);
-  }, [unlockEnding]);
+  }, [unlockEnding, endingUnlocked]);
 
   const handleClose = useCallback(() => {
     setPhase("idle");
@@ -387,6 +400,67 @@ export default function SecretEnding() {
               }}
             />
           </>
+        )}
+      </AnimatePresence>
+
+      {/* ── Album unlock toast ── */}
+      <AnimatePresence>
+        {showAlbumToast && (
+          <motion.div
+            key="album-toast"
+            initial={{ opacity: 0, y: 32, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            transition={{ duration: 0.55, ease: [0.34, 1.56, 0.64, 1] }}
+            style={{
+              position: "fixed",
+              bottom: "clamp(24px, 5vw, 48px)",
+              left: "50%",
+              transform: "translateX(-50%)",
+              zIndex: 9999,
+              pointerEvents: "none",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+                padding: "14px 22px",
+                borderRadius: "50px",
+                background: "linear-gradient(135deg, rgba(14,9,2,0.98), rgba(22,14,4,0.98))",
+                border: "1.5px solid rgba(200,160,40,0.65)",
+                boxShadow: "0 0 32px rgba(200,150,30,0.25), 0 8px 32px rgba(0,0,0,0.7)",
+                backdropFilter: "blur(16px)",
+                whiteSpace: "nowrap",
+              }}
+            >
+              <motion.span
+                initial={{ scale: 0 }}
+                animate={{ scale: [0, 1.4, 1] }}
+                transition={{ delay: 0.15, duration: 0.5, ease: "easeOut" }}
+                style={{ fontSize: "20px", lineHeight: 1, filter: "drop-shadow(0 0 8px rgba(250,220,80,0.8))" }}
+              >
+                ✨
+              </motion.span>
+              <div>
+                <p style={{ fontFamily: "Georgia, serif", fontSize: "clamp(12px, 1.4vw, 14px)", fontWeight: "bold", color: "#f0d888", letterSpacing: "0.03em", marginBottom: "2px" }}>
+                  Nova memória desbloqueada!
+                </p>
+                <p style={{ fontFamily: "Georgia, serif", fontSize: "clamp(10px, 1.1vw, 12px)", color: "rgba(230,195,120,0.75)", letterSpacing: "0.02em" }}>
+                  O Álbum Livre agora está disponível.
+                </p>
+              </div>
+              <motion.span
+                initial={{ scale: 0 }}
+                animate={{ scale: [0, 1.3, 1] }}
+                transition={{ delay: 0.3, duration: 0.45, ease: "easeOut" }}
+                style={{ fontSize: "18px", lineHeight: 1 }}
+              >
+                📸
+              </motion.span>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
 

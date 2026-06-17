@@ -20,7 +20,7 @@ export default function GameHUD() {
   const [confirmAction, setConfirmAction] = useState<ConfirmAction | null>(null);
 
   const { completedCount, totalCount, completedChapters, resetAll, resetChapter, endingUnlocked } = useProgress();
-  const albumUnlocked = completedChapters.length >= CHAPTER_ORDER.length;
+  const albumUnlocked = endingUnlocked;
   const { playing, currentIdx, playlist, toggle, next } = useMusicPlayer();
   const progressPercent = Math.round((completedCount / totalCount) * 100);
 
@@ -84,10 +84,10 @@ export default function GameHUD() {
           {/* Current track name — hidden on small screens */}
           <div className="hidden lg:flex flex-col items-end max-w-[120px]">
             <span className="text-xs truncate leading-tight" style={{ color: "rgba(200,160,60,0.7)", fontFamily: "Georgia, serif", fontSize: "9px" }}>
-              {playlist[currentIdx].name}
+              {(playlist[currentIdx] ?? playlist[0])?.name}
             </span>
             <span className="text-xs truncate leading-tight" style={{ color: "rgba(200,160,60,0.4)", fontFamily: "Georgia, serif", fontSize: "8px" }}>
-              {playlist[currentIdx].artist}
+              {(playlist[currentIdx] ?? playlist[0])?.artist}
             </span>
           </div>
 
